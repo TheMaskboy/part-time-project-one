@@ -1,0 +1,11 @@
+.header {
+  height: 50px;
+  background-color: rgb(53,100,227);
+  display: flex;
+  padding: 0 30px;
+  .logo {
+    color: #fff;
+    line-height: 50px;
+    font-size: 25px;
+  }
+}

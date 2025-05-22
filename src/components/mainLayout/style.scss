@@ -1,0 +1,10 @@
+.main {
+  display: flex;
+  .left-menu {
+    width: 200px;
+  }
+  .right-menu {
+    width: calc(100% - 200px);
+    padding: 30px;
+  }
+}
