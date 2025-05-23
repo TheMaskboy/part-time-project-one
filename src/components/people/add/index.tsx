@@ -1,13 +1,13 @@
 import { Button, Input, Table, type TableProps } from 'antd'
-import { useState } from 'react'
+import { forwardRef, useImperativeHandle, useState } from 'react'
 import './style.scss'
 import type { PeopleItem } from '../../../type/people'
 import { PeopleList } from '../../../mock/people'
 
-const PeopleAdd = () => {
+const PeopleAdd = forwardRef(({ selectPeoples }: { selectPeoples: (value: PeopleItem[]) => void }, ref) => {
   const [searchValue, setSearchValue] = useState('')
 
-  const [selectId, setSelectId] = useState<number[]>([])
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
 
   const columns: TableProps<PeopleItem>['columns'] = [
     {
@@ -19,16 +19,26 @@ const PeopleAdd = () => {
     {
       title: '用户名称',
       dataIndex: 'name',
-      key: '1',
+      key: '2',
       width: 100,
-    },
+    }
   ]
+
+  const updatePeople = (value: PeopleItem[]) => {
+    setSelectedRowKeys(value.map(item => item.id))
+  }
+
+  // 向父组件暴露指定的方法
+  useImperativeHandle(ref, () => ({
+    updatePeople
+  }));
 
   const [selectionType] = useState<'checkbox' | 'radio'>('checkbox')
 
   const rowSelection: TableProps<PeopleItem>['rowSelection'] = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: PeopleItem[]) => {
-      setSelectId(selectedRows.map((item) => item.id))
+    onChange: (_, selectedRows: PeopleItem[]) => {
+      setSelectedRowKeys(selectedRows.map(item => item.id))
+      selectPeoples(selectedRows)
     },
     getCheckboxProps: (record: PeopleItem) => ({
       name: record.name,
@@ -51,6 +61,7 @@ const PeopleAdd = () => {
       <Table<PeopleItem>
         rowSelection={{
           type: selectionType,
+          selectedRowKeys,
           ...rowSelection,
         }}
         columns={columns}
@@ -59,6 +70,6 @@ const PeopleAdd = () => {
       />
     </div>
   )
-}
+})
 
 export default PeopleAdd

@@ -4,6 +4,7 @@ import { ProjectLists } from '../../../mock/project'
 import { ProjectStatusList } from '../../../enum/project'
 import './style.scss'
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const ProjectList = () => {
   const [searchValue, setSearchValue] = useState('')
@@ -61,18 +62,23 @@ const ProjectList = () => {
     },
   ]
 
+  const navigate = useNavigate()
+
   return (
     <div className="table">
       <div className="wrap">
-        <span>项目名称：</span>
-        <Input
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          width={200}
-          placeholder="请输入项目名称"
-        />
-        <Button type="primary">查询</Button>
-        <Button>重置</Button>
+        <div className="inner">
+          <span>项目名称：</span>
+          <Input
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            width={200}
+            placeholder="请输入项目名称"
+          />
+          <Button type="primary">查询</Button>
+          <Button>重置</Button>
+        </div>
+        <Button type='primary' onClick={() => navigate('/project/create')}>新建项目</Button>
       </div>
       <Table<ProjectItem> columns={columns} dataSource={ProjectLists} />
     </div>

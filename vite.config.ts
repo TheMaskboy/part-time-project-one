@@ -36,10 +36,12 @@ export default defineConfig(({ mode }) => {
           '/api': {
             target: env.VITE_API_BASE_URL,
             changeOrigin: true,
-            rewrite: (path) => path.replace(/^\/api/, ''),
+            rewrite: (path: string) => path.replace(/^\/api/, ''),
             secure: false, // 如果是https且证书不受信任，需要设置此项
           },
         },
+        port: 9000, // 设置你想要的端口号
+        strictPort: true // 如果端口被占用，直接退出而不是尝试其他端口
       },
       // 开发环境特定配置...
     }
