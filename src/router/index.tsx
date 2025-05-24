@@ -7,16 +7,19 @@ import ProjectCreate from '../view/project/create'
 import ProjectList from '../view/project/list'
 import UserList from '../view/user/list'
 import UserCreate from '../view/user/create'
+import ProjectDetail from '../view/project/detail'
+import UserDetail from '../view/user/detail'
+import UserLogin from '../view/login'
 
 const Routes: AppRoute[] = [
   {
     path: '/',
-    element: <Navigate to="/project/list"></Navigate>
+    element: <Navigate to="/project/list"></Navigate>,
   },
   {
     path: '/',
     element: <Home />,
-    name: "project",
+    name: 'project',
     children: [
       {
         path: '/project',
@@ -31,6 +34,7 @@ const Routes: AppRoute[] = [
             auth: true,
             role: ['creator', 'admin'],
             element: <ProjectList />,
+            isShowMenu: true,
           },
           {
             path: 'create',
@@ -38,6 +42,14 @@ const Routes: AppRoute[] = [
             auth: true,
             role: ['creator', 'admin'],
             element: <ProjectCreate />,
+            isShowMenu: true,
+          },
+          {
+            path: 'detail/:id',
+            name: '项目详情',
+            auth: true,
+            role: ['creator', 'admin'],
+            element: <ProjectDetail />,
           },
         ],
       },
@@ -54,6 +66,7 @@ const Routes: AppRoute[] = [
             auth: true,
             role: ['creator', 'admin'],
             element: <UserList />,
+            isShowMenu: true,
           },
           {
             path: 'create',
@@ -61,12 +74,31 @@ const Routes: AppRoute[] = [
             auth: true,
             role: ['creator', 'admin'],
             element: <UserCreate />,
-          }
-        ]
-      }
+            isShowMenu: true,
+          },
+          {
+            path: 'detail/:id',
+            name: '用户详情',
+            auth: true,
+            role: ['creator', 'admin'],
+            element: <UserDetail />,
+            isShowMenu: false,
+          },
+        ],
+      },
     ],
   },
-
+  {
+    path: '/',
+    element: <Home />,
+    name: 'login',
+    children: [
+      {
+        path: 'login',
+        element: <UserLogin />,
+      },
+    ],
+  },
 ]
 
 export default Routes

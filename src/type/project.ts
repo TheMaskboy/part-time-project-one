@@ -7,4 +7,5 @@ export interface ProjectItem {
   lookCount: number // 浏览次数
   cycle: string //项目周期
   createTime: string // 创建时间
+  createPeople: string // 创建人
 }

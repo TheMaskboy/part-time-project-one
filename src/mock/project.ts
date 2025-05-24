@@ -10,6 +10,7 @@ export const ProjectLists: ProjectItem[] = [
     lookCount: 100,
     cycle: '2025/4/1-2025/4/10',
     createTime: '2025/3/18',
+    createPeople: 'admin',
   },
   {
     id: 2,
@@ -20,5 +21,6 @@ export const ProjectLists: ProjectItem[] = [
     lookCount: 130,
     cycle: '2025/4/1-2025/4/10',
     createTime: '2025/3/18',
+    createPeople: 'admin',
   },
 ]

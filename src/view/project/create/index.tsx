@@ -1,4 +1,12 @@
-import { Button, DatePicker, Form, Input, Modal, Table, type TableProps } from 'antd'
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Table,
+  type TableProps,
+} from 'antd'
 import dayjs from 'dayjs'
 import './style.scss'
 import { useRef, useState } from 'react'
@@ -15,11 +23,13 @@ const ProjectCreate = () => {
   const { RangePicker } = DatePicker
   const [isShowModal, setIsShowModal] = useState(false)
 
-  const onClickSubmit = () => { }
+  const onClickSubmit = () => {}
 
   const [selectPeople, setSelectPeople] = useState<PeopleItem[]>([])
-  const [selectCurrentPeople, setSelectCurrentPeople] = useState<PeopleItem[]>([])
-  const childRef = useRef({}) as React.MutableRefObject<any>;
+  const [selectCurrentPeople, setSelectCurrentPeople] = useState<PeopleItem[]>(
+    []
+  )
+  const childRef = useRef({}) as React.MutableRefObject<any>
 
   const columns: TableProps<PeopleItem>['columns'] = [
     {
@@ -27,47 +37,52 @@ const ProjectCreate = () => {
       dataIndex: 'id',
       key: '1',
       width: 100,
-      align: "center"
+      align: 'center',
     },
     {
       title: '用户名称',
       dataIndex: 'name',
       key: '2',
       width: 100,
-      align: "center"
+      align: 'center',
     },
     {
       title: '基本信息',
       dataIndex: 'detail',
       key: '3',
       width: 300,
-      align: "center",
+      align: 'center',
       render: (_, item: PeopleItem) => {
-        return <div className='detail'>
-          <div className="detail-item">年龄：{item.age}</div>
-          <div className="detail-item">生日：{item.birthday}</div>
-          <div className="detail-item">身高：{item.raise}</div>
-          <div className="detail-item">体重：{item.weight}</div>
-          <div className="detail-item">照片：</div>
-        </div>
-      }
+        return (
+          <div className="detail">
+            <div className="detail-item">年龄：{item.age}</div>
+            <div className="detail-item">生日：{item.birthday}</div>
+            <div className="detail-item">身高：{item.raise}</div>
+            <div className="detail-item">体重：{item.weight}</div>
+            <div className="detail-item">照片：</div>
+          </div>
+        )
+      },
     },
     {
       title: '操作',
       dataIndex: 'operate',
       key: '4',
       width: 100,
-      align: "center",
+      align: 'center',
       render: (_, item: PeopleItem) => {
-        return <Button type='primary' onClick={() => deletePeople(item)}>删除</Button>
-      }
+        return (
+          <Button type="primary" onClick={() => deletePeople(item)}>
+            删除
+          </Button>
+        )
+      },
     },
   ]
 
   const deletePeople = (value: PeopleItem) => {
-    const index = selectCurrentPeople.findIndex(item => item.id === value.id)
+    const index = selectCurrentPeople.findIndex((item) => item.id === value.id)
     selectCurrentPeople.splice(index, 1)
-    console.log(selectCurrentPeople)
     setSelectCurrentPeople([...selectCurrentPeople])
     childRef.current.updatePeople(selectCurrentPeople)
   }
@@ -113,7 +128,7 @@ const ProjectCreate = () => {
         bordered
       />
       <div className="btns">
-        <Button type='primary'>确认</Button>
+        <Button type="primary">确认</Button>
         <Button>取消</Button>
       </div>
       <Modal

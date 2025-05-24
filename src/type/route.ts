@@ -8,6 +8,7 @@ interface RouteBase {
   auth?: boolean
   role?: string[]
   children?: RouteBase[]
+  isShowMenu?: boolean
 }
 
 export type AppRoute = RouteBase & RouteObject

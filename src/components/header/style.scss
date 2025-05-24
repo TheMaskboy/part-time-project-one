@@ -3,9 +3,21 @@
   background-color: rgb(53,100,227);
   display: flex;
   padding: 0 30px;
+  justify-content: space-between;
   .logo {
     color: #fff;
     line-height: 50px;
     font-size: 25px;
+  }
+  .user-detail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    height: 50px;
+    cursor: pointer;
+    .username {
+      margin-left: 10px;
+    }
   }
 }
