@@ -1,8 +1,6 @@
 import { Upload, message, type UploadFile } from 'antd'
 import { useEffect, useState } from 'react'
-import { Image as AImage } from 'antd'
 import { RiAddLine, RiLoader2Line } from 'react-icons/ri'
-import UploadList from 'antd/es/upload/UploadList'
 
 type ImageUploadProps = {
   limit?: number
@@ -98,7 +96,7 @@ const ImageUpload = (props: ImageUploadProps) => {
     </div>
   )
   const [fileList, setFileList] = useState<UploadFile<{ url: string }>[]>([])
-  const [previewVisible, setPreviewVisible] = useState(false)
+  const [_, setPreviewVisible] = useState(false)
 
   const onPreview = () => {
     setPreviewVisible(true)

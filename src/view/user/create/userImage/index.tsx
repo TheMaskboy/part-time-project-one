@@ -19,11 +19,16 @@ const UserImage = ({ value, onChange }: PropsType) => {
   const [isPublicValue, setIsPublic] = useState(false)
 
   useEffect(() => {
-    onChange &&
-      onChange({
-        isPublic: !!isPublicValue ? 1 : 0,
-      })
+    const newObj = Object.assign(value || {}, {
+      isPublic: !!isPublicValue ? 1 : 0,
+    })
+    onChange && onChange(newObj)
   }, [isPublicValue])
+
+  const onChangeValue = (detail: any) => {
+    const newObj = Object.assign(value || {}, { value: detail })
+    onChange && onChange(newObj)
+  }
 
   return (
     <div>
@@ -35,7 +40,7 @@ const UserImage = ({ value, onChange }: PropsType) => {
         onChange={(e) => setIsPublic(e)}
       />
       <div style={{ marginTop: '20px' }}>
-        <ImageUpload value={value?.value} onChange={onChange} />
+        <ImageUpload value={value?.value} onChange={onChangeValue} />
       </div>
     </div>
   )

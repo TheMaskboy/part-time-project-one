@@ -103,9 +103,7 @@ const ProjectList = () => {
   }
 
   const [selectPeople, setSelectPeople] = useState<PeopleItem[]>([])
-  const [selectCurrentPeople, setSelectCurrentPeople] = useState<PeopleItem[]>(
-    []
-  )
+  const [_, setSelectCurrentPeople] = useState<PeopleItem[]>([])
   const selectPeoples = (value: PeopleItem[]) => {
     setSelectPeople(value)
   }

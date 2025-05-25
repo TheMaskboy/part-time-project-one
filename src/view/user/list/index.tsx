@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom'
 
 const UserList = () => {
   const [searchValue, setSearchValue] = useState('')
-  const [userLists, setUserList] = useState<PeopleItem[]>([])
   const navigate = useNavigate()
   const [list, setList] = useState<PeopleItem[]>(PeopleList)
   const columns: TableProps<PeopleItem>['columns'] = [
@@ -44,14 +43,14 @@ const UserList = () => {
       },
     },
     {
-      title: 'operate',
+      title: '操作',
       dataIndex: 'operate',
       key: '4',
       width: 100,
       align: 'center',
       render: (_, item: PeopleItem) => {
         return (
-          <div className="btns">
+          <div className="btns-wrap">
             <Button onClick={() => navigate(`/user/detail/1`)}>详情</Button>
             <Button>修改</Button>
             <Button onClick={() => deletePeople(item)}>删除</Button>

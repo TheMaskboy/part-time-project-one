@@ -13,7 +13,7 @@ import { PeopleLookCountList } from '../../../mock/peopleLook'
 import UserLook from '../../../components/user/look'
 const ProjectDetail = () => {
   const id = useParams()?.id
-  const [detail, setDetail] = useState<ProjectItem>(ProjectLists[0])
+  const [detail] = useState<ProjectItem>(ProjectLists[0])
   const [peopleList, setPeopleList] = useState<PeopleItem[]>(PeopleList)
   const [isShowModal, setIsShowModal] = useState(false)
   const childRef = useRef({}) as React.MutableRefObject<any>

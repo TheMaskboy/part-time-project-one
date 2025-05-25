@@ -5,7 +5,7 @@ import { PeopleDetail } from '../../../mock/people'
 import { Descriptions } from 'antd'
 
 const UserDetail = () => {
-  const [detail, setDetail] = useState<PeopleDetailType>(PeopleDetail)
+  const [detail] = useState<PeopleDetailType>(PeopleDetail)
   return (
     <div>
       <Descriptions title="用户详情">
