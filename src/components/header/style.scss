@@ -1,9 +1,11 @@
 .header {
   height: 50px;
-  background-color: rgb(53,100,227);
+  // background-color: rgb(53,100,227);
+  background: linear-gradient(180deg, #2252B9 0%, #518EFD 100%);
   display: flex;
   padding: 0 30px;
   justify-content: space-between;
+  width: 100vw;
   .logo {
     color: #fff;
     line-height: 50px;

@@ -2,9 +2,28 @@
   display: flex;
   .left-menu {
     width: 200px;
+    min-height: 100vh;
+    background-color: #fff;
+    .ant-menu-item-selected {
+      color: #fff !important;
+      background: linear-gradient(180deg, #528FFF 0%, #2251B8 100%);
+    }
+    .ant-menu-item {
+      color: #2150B7;
+      display: flex;
+    }
+    .custom-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .icon {
+      width: 14px;
+      height: 14px;
+    }
   }
   .right-menu {
-    width: calc(100% - 200px);
+    width: calc(100vw - 200px);
     padding: 30px;
   }
 }

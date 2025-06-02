@@ -2,7 +2,7 @@
 import { Navigate } from 'react-router-dom'
 import MainLayout from '../components/mainLayout'
 import type { AppRoute } from '../type/route'
-import Home from '../view/project'
+import Home from '../components/layout'
 import ProjectCreate from '../view/project/create'
 import ProjectList from '../view/project/list'
 import UserList from '../view/user/list'
@@ -10,6 +10,12 @@ import UserCreate from '../view/user/create'
 import ProjectDetail from '../view/project/detail'
 import UserDetail from '../view/user/detail'
 import UserLogin from '../view/login'
+import H5Layout from '../components/h5/layout'
+import H5Login from '../view/h5/login'
+import menuImage1 from '../assets/image/home-img-1.png'
+import menuImage2 from '../assets/image/home-img-2.png'
+import menuImageActive1 from '../assets/image/home-img-1-active.png'
+import menuImageActive2 from '../assets/image/home-img-2-active.png'
 
 const Routes: AppRoute[] = [
   {
@@ -26,6 +32,8 @@ const Routes: AppRoute[] = [
         name: '项目管理',
         auth: true,
         role: ['creator', 'admin'],
+        icon: menuImage1,
+        iconActive: menuImageActive1,
         element: <MainLayout />,
         children: [
           {
@@ -58,6 +66,8 @@ const Routes: AppRoute[] = [
         name: '用户管理',
         auth: true,
         role: ['creator', 'admin'],
+        icon: menuImage2,
+        iconActive: menuImageActive2,
         element: <MainLayout />,
         children: [
           {
@@ -96,6 +106,17 @@ const Routes: AppRoute[] = [
       {
         path: 'login',
         element: <UserLogin />,
+      },
+    ],
+  },
+  {
+    path: '/m',
+    element: <H5Layout />,
+    name: 'm',
+    children: [
+      {
+        path: 'login',
+        element: <H5Login />,
       },
     ],
   },

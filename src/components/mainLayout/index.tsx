@@ -12,7 +12,6 @@ const MainLayout = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])
   const location = useLocation()
 
-  const { SubMenu } = Menu
   useEffect(() => {
     const result = route.filter((item) => item.name === 'project')
     result[0].children?.forEach((item) => {
@@ -27,10 +26,7 @@ const MainLayout = () => {
     const newOpenKeys = pathSnippets.map(
       (_, index) => `/${pathSnippets.slice(0, index + 1).join('/')}`
     )
-
-    // 只保留父级菜单的展开状态
-    setOpenKeys(newOpenKeys.slice(0, -1))
-    setSelectedKeys([location.pathname])
+    setSelectedKeys(newOpenKeys.slice(0, -1))
   }, [location])
 
   // 处理菜单展开/收起
@@ -44,22 +40,28 @@ const MainLayout = () => {
   }
 
   // 递归渲染菜单项
-  const renderMenuItems = (items: AppRoute[], fItem?: AppRoute) => {
+  const renderMenuItems = (items: AppRoute[]) => {
     return items.map((item) => {
-      if (item.children) {
-        return (
-          <SubMenu key={item.path} icon={item.icon} title={item.name}>
-            {renderMenuItems(item.children, item)}
-          </SubMenu>
-        )
-      }
-
       return (
-        <Menu.Item key={`${fItem?.path}/${item.path}`} icon={item.icon}>
+        <Menu.Item key={`${item?.path}`}>
           <Link
-            to={fItem ? (fItem?.path || '') + '/' + item.path : item.path || ''}
+            to={
+              item.path + '/' + (!!item.children ? item.children[0].path : '')
+            }
           >
-            {item.name}
+            <div className="custom-item">
+              <div
+                className="icon"
+                style={{
+                  backgroundImage: `url(${
+                    location.pathname.includes(item.path || '')
+                      ? item.iconActive
+                      : item.icon
+                  })`,
+                }}
+              />
+              {item.name}
+            </div>
           </Link>
         </Menu.Item>
       )

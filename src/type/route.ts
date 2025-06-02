@@ -4,6 +4,7 @@ import type { RouteObject } from 'react-router-dom'
 interface RouteBase {
   name?: string
   icon?: React.ReactNode
+  iconActive?: React.ReactNode
   hidden?: boolean
   auth?: boolean
   role?: string[]
