@@ -14,8 +14,11 @@ import H5Layout from '../components/h5/layout'
 import H5Login from '../view/h5/login'
 import menuImage1 from '../assets/image/home-img-1.png'
 import menuImage2 from '../assets/image/home-img-2.png'
+import menuImage3 from '../assets/image/home-img-3.png'
 import menuImageActive1 from '../assets/image/home-img-1-active.png'
 import menuImageActive2 from '../assets/image/home-img-2-active.png'
+import menuImageActive3 from '../assets/image/home-img-3-active.png'
+import LoginUser from '../view/user/loginUser'
 
 const Routes: AppRoute[] = [
   {
@@ -96,6 +99,25 @@ const Routes: AppRoute[] = [
           },
         ],
       },
+      {
+        path: '/loginUser',
+        name: '登录用户',
+        auth: true,
+        role: ['creator', 'admin'],
+        icon: menuImage3,
+        iconActive: menuImageActive3,
+        element: <MainLayout />,
+        children:[
+          {
+            path: 'list',
+            name: '用户列表',
+            auth: true,
+            role: ['creator', 'admin'],
+            element: <LoginUser />,
+            isShowMenu: true,
+          },
+        ]
+      }
     ],
   },
   {

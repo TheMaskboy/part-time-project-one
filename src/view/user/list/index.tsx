@@ -1,10 +1,11 @@
 import { Button, Input, Modal, Table, type TableProps } from 'antd'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { PeopleItem } from '../../../type/people'
 import './style.scss'
 import { PeopleList } from '../../../mock/people'
 import { useNavigate } from 'react-router-dom'
 import ShowItem from './show-item'
+import { getUserList } from '../../../api/user'
 
 const UserList = () => {
   const [searchValue, setSearchValue] = useState('')
@@ -63,7 +64,7 @@ const UserList = () => {
       render: (_, item: PeopleItem) => {
         return (
           <div className="btns-wrap">
-            <div onClick={() => {navigate(`/user/detail/1`);window.location.reload()}}>详情</div>
+            <div onClick={() => { navigate(`/user/detail/1`); window.location.reload() }}>详情</div>
             <div>修改</div>
             <div onClick={() => deletePeople(item)}>删除</div>
           </div>
@@ -71,6 +72,11 @@ const UserList = () => {
       },
     },
   ]
+
+  useEffect(() => {
+    console.log(111)
+    getUserList()
+  }, [])
 
   const deletePeople = (detail: PeopleItem) => {
     Modal.confirm({

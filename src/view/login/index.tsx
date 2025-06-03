@@ -3,7 +3,7 @@ import './style.scss'
 
 const UserLogin = () => {
   type UserLoginType = {
-    name: string
+    account: string
     password: string
   }
 
@@ -20,7 +20,7 @@ const UserLogin = () => {
         <Form form={form} className="form">
           <Form.Item
             label=""
-            name="name"
+            name="account"
             rules={[
               {
                 required: true,

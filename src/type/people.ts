@@ -8,6 +8,16 @@ export interface PeopleItem {
   image: CustomType // 照片
 }
 
+export interface LoginPeopleItem {
+  nickname: string // 用户名称
+  id: number // 用户ID
+  age: string // 年龄
+  birthday: string // 生日
+  height: CustomType // 身高
+  weight: CustomType // 体重
+  image: CustomType // 照片
+}
+
 export interface CustomType {
   name: string
   value: string
