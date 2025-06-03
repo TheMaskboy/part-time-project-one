@@ -1,5 +1,6 @@
 import { Button, Form, Input } from 'antd'
 import './style.scss'
+import { apiPostLogin } from '../../api/user'
 
 const UserLogin = () => {
   type UserLoginType = {
@@ -10,7 +11,10 @@ const UserLogin = () => {
   const [form] = Form.useForm<UserLoginType>()
 
   const submit = () => {
-    form.validateFields().then(() => {})
+    form.validateFields().then((res) => {
+      const { account, password } = res
+      apiPostLogin({ account, password })
+    })
   }
 
   return (

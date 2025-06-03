@@ -38,13 +38,15 @@ const errorHandler = (error: any) => {
 
 // 请求拦截器
 httpRequest.interceptors.request.use((config) => {
-  const token = localStorage.getItem('auth_token')
-  //console.log(token)
+  // const token = localStorage.getItem('auth_token')
+  const token =
+    'Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTc0OTAyNDk1NSwiaWF0IjoxNzQ4OTM4NTU1fQ.KtHJUYmRcZwT3bUKbPrPYKNzA7LlWAqLfEOg_BMaZ-wEQ9AyqB7uUGe4Z9f9gw2c4Ecvgf3_f062XV_wR4bnUg'
 
   // 附加 发给服务器的Token
   if (token) {
     ;(config as any).headers.Authorization = token
     ;(config as any).headers.token = token
+    ;(config as any).headers['ngrok-skip-browser-warning'] = true
   }
   return config
 }, errorHandler)

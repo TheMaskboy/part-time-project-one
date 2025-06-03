@@ -58,3 +58,8 @@ export interface PeopleDetailType {
   image: CustomType // 照片
   custom: CustomType[]
 }
+
+export interface LoginRequest {
+  account: string
+  password: string
+}
