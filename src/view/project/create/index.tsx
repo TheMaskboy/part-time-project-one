@@ -23,7 +23,7 @@ const ProjectCreate = () => {
   const { RangePicker } = DatePicker
   const [isShowModal, setIsShowModal] = useState(false)
 
-  const onClickSubmit = () => {}
+  const onClickSubmit = () => { }
 
   const [selectPeople, setSelectPeople] = useState<PeopleItem[]>([])
   const [selectCurrentPeople, setSelectCurrentPeople] = useState<PeopleItem[]>(
@@ -41,7 +41,7 @@ const ProjectCreate = () => {
     },
     {
       title: '用户名称',
-      dataIndex: 'name',
+      dataIndex: 'nickname',
       key: '2',
       width: 100,
       align: 'center',
@@ -57,8 +57,8 @@ const ProjectCreate = () => {
           <div className="detail">
             <div className="detail-item">年龄：{item.age}</div>
             <div className="detail-item">生日：{item.birthday}</div>
-            <div className="detail-item">身高：{item.raise}</div>
-            <div className="detail-item">体重：{item.weight}</div>
+            <div className="detail-item">身高：{item.height.value}</div>
+            <div className="detail-item">体重：{item.weight.value}</div>
             <div className="detail-item">照片：</div>
           </div>
         )
@@ -72,9 +72,9 @@ const ProjectCreate = () => {
       align: 'center',
       render: (_, item: PeopleItem) => {
         return (
-          <Button type="primary" onClick={() => deletePeople(item)}>
+          <div style={{cursor:"pointer"}} onClick={() => deletePeople(item)}>
             删除
-          </Button>
+          </div>
         )
       },
     },
@@ -97,7 +97,7 @@ const ProjectCreate = () => {
   }
 
   return (
-    <div>
+    <div className='create'>
       <Form style={{ width: '400px' }} form={form}>
         <Form.Item name="name" required label="项目名称">
           <Input placeholder="请输入项目名称" />
@@ -128,7 +128,7 @@ const ProjectCreate = () => {
         bordered
       />
       <div className="btns">
-        <Button type="primary">确认</Button>
+        <Button type="primary">提交</Button>
         <Button>取消</Button>
       </div>
       <Modal

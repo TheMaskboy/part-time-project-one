@@ -38,14 +38,14 @@ const ProjectList = () => {
     },
     {
       title: '参与人数',
-      dataIndex: 'people',
+      dataIndex: 'peopleNum',
       key: '4',
       width: 100,
       align: 'center',
     },
     {
       title: '项目描述',
-      dataIndex: 'description',
+      dataIndex: 'desc',
       key: '5',
       width: 100,
       align: 'center',
@@ -59,21 +59,24 @@ const ProjectList = () => {
     },
     {
       title: '项目周期',
-      dataIndex: 'cycle',
+      dataIndex: '',
       key: '7',
       width: 100,
       align: 'center',
+      render: (_, detail: ProjectItem) => (
+        <div>{detail.startTime} - {detail.endTime}</div>
+      )
     },
     {
       title: '创建时间',
-      dataIndex: 'createTime',
+      dataIndex: 'createAt',
       key: '8',
       width: 100,
       align: 'center',
     },
     {
       title: '创建人',
-      dataIndex: 'createPeople',
+      dataIndex: 'createName',
       key: '9',
       width: 100,
       align: 'center',

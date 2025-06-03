@@ -34,8 +34,8 @@ const UserTable = ({
           <div className="detail">
             <div className="detail-item">年龄：{item.age}</div>
             <div className="detail-item">生日：{item.birthday}</div>
-            <div className="detail-item">身高：{item.raise}</div>
-            <div className="detail-item">体重：{item.weight}</div>
+            <div className="detail-item">身高：{item.height.value}</div>
+            <div className="detail-item">体重：{item.weight.value}</div>
             <div className="detail-item">照片：</div>
           </div>
         )

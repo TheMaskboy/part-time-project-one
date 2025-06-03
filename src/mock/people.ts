@@ -2,35 +2,74 @@ import type { PeopleItem } from '../type/people'
 
 export const PeopleList: PeopleItem[] = [
   {
-    name: '张三',
+    nickname: '张三',
     id: 1,
     age: '18',
     birthday: '2025/01/02',
-    weight: '180',
-    raise: '180',
-    photo: '',
+    weight: {
+      name: "体重",
+      value: '180',
+      show: 0
+    },
+    height: {
+      name: "身高",
+      value: '180',
+      show: 0
+    },
+    image: {
+      name: "照片",
+      value: '180',
+      show: 0
+    },
   },
   {
-    name: '李四',
+    nickname: '李四',
     id: 2,
     age: '18',
     birthday: '2025/01/02',
-    weight: '180',
-    raise: '180',
-    photo: '',
+    weight: {
+      name: "体重",
+      value: '180',
+      show: 0
+    },
+    height: {
+      name: "身高",
+      value: '180',
+      show: 0
+    },
+    image: {
+      name: "照片",
+      value: '180',
+      show: 0
+    },
   },
 ]
 
 export const PeopleDetail = {
-  name: '张三',
+  nickname: '张三',
   id: 1,
   age: '18',
   birthday: '2025/01/02',
-  weight: '180',
-  raise: '180',
-  photo: '',
+  weight: {
+    name: "体重",
+    value: '180',
+    show: 0
+  },
+  height: {
+    name: "身高",
+    value: '180',
+    show: 0
+  },
+  image: {
+    name: "图片",
+    value: '180',
+    show: 0
+  },
   custom: [
-    ['视力', '3.0'],
-    ['听力', '5.0'],
+    {
+      name: "图片",
+      value: '180',
+      show: 0
+    }
   ],
 }

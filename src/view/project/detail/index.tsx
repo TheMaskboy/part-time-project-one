@@ -48,14 +48,14 @@ const ProjectDetail = () => {
           {ProjectStatusList.find((item) => item.type === detail.status)?.name}
         </Descriptions.Item>
         <Descriptions.Item label="项目描述">
-          {detail.description}
+          {detail.desc}
         </Descriptions.Item>
-        <Descriptions.Item label="项目周期">{detail.cycle}</Descriptions.Item>
+        <Descriptions.Item label="项目周期">{detail.createAt} - {detail.endTime}</Descriptions.Item>
         <Descriptions.Item label="创建时间">
-          {detail.createTime}
+          {detail.createAt}
         </Descriptions.Item>
         <Descriptions.Item label="创建人">
-          {detail.createPeople}
+          {detail.createName}
         </Descriptions.Item>
       </Descriptions>
       <div className="people-num">

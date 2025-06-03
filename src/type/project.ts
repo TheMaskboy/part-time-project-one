@@ -2,10 +2,11 @@ export interface ProjectItem {
   name: string // 项目名称
   id: number
   status: number // 状态 1 未开始 2 招募中 3 已结束
-  people: number // 参与人数
-  description: string //描述
+  peopleNum: number // 参与人数
+  desc: string //描述
   lookCount: number // 浏览次数
-  cycle: string //项目周期
-  createTime: string // 创建时间
-  createPeople: string // 创建人
+  createAt: string // 创建时间
+  createName: string // 创建人
+  startTime: string // 开始时间
+  endTime: string// 结束时间
 }

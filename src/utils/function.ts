@@ -46,3 +46,8 @@ export const queryUrl = (params: object) => {
   })
   return qs.stringify(obj)
 }
+
+
+export const isFileOversized = (file: File,limit:number) => {
+  return file.size / 1024 / 1024 > limit
+}

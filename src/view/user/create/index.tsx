@@ -1,5 +1,5 @@
 import { Button, DatePicker, Form, Input, Modal } from 'antd'
-import type { PeopleEditType } from '../../../type/people'
+import type { CustomType, PeopleEditType } from '../../../type/people'
 import PeopleEidtItem from './item'
 import UserImage from './userImage'
 import './style.scss'
@@ -14,16 +14,20 @@ const UserCreate = () => {
         file?: Blob
       }[]
     }
-    custom: string[][]
+    propertyVos: CustomType[]
   }
 
   const [form] = Form.useForm<PeopleType>()
   const [isShowModal, setIsShowModal] = useState(false)
   const [addMessage, setAddMessage] = useState('')
-  const [customList, setCustomList] = useState<string[][]>([])
+  const [customList, setCustomList] = useState<CustomType[]>([])
 
   const onClickSubmit = () => {
-    const arr = [addMessage]
+    const arr = {
+      name: addMessage,
+      value: "",
+      show: 0
+    }
     customList.push(arr)
     setCustomList([...customList])
     setIsShowModal(false)
@@ -35,12 +39,18 @@ const UserCreate = () => {
     })
   }
 
+  const updateCustomList = (value: CustomType) => {
+    const index = customList.findIndex(item => item.name === value.name) || 0
+    customList[index] = value
+    setCustomList([...customList])
+  }
+
   return (
     <div>
       <Form style={{ width: '400px' }} form={form}>
         <Form.Item
           label="用户昵称"
-          name="name"
+          name="nickname"
           rules={[
             {
               required: true,
@@ -100,11 +110,12 @@ const UserCreate = () => {
         </Form.Item>
         {customList.map((item) => {
           return (
-            <Form.Item key={item[0]} label={item[0]} required>
+            <Form.Item
+              label={item.name} required>
               <Custom
                 custom={item}
                 customList={customList}
-                updateCustomList={(e) => setCustomList(e)}
+                updateCustomList={(e) => updateCustomList(e)}
               />
             </Form.Item>
           )

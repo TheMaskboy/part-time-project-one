@@ -45,11 +45,13 @@
     backdrop-filter: blur(10px) brightness(100%) !important;
     border-radius: 4px;
   }
-}
 
-.btns {
-  button {
-    width: 100%;
-    aspect-ratio: 439 / 50;
+  .btns {
+    display: flex;
+    justify-content: center;
+    button {
+      width: 100%;
+      aspect-ratio: 439 / 50;
+    }
   }
 }

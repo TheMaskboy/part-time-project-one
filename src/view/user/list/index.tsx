@@ -4,6 +4,7 @@ import type { PeopleItem } from '../../../type/people'
 import './style.scss'
 import { PeopleList } from '../../../mock/people'
 import { useNavigate } from 'react-router-dom'
+import ShowItem from './show-item'
 
 const UserList = () => {
   const [searchValue, setSearchValue] = useState('')
@@ -19,7 +20,14 @@ const UserList = () => {
     },
     {
       title: '用户名称',
-      dataIndex: 'name',
+      dataIndex: 'nickname',
+      key: '2',
+      width: 100,
+      align: 'center',
+    },
+    {
+      title: '生日',
+      dataIndex: 'birthday',
       key: '2',
       width: 100,
       align: 'center',
@@ -33,11 +41,15 @@ const UserList = () => {
       render: (_, item: PeopleItem) => {
         return (
           <div className="detail">
-            <div className="detail-item">年龄：{item.age}</div>
-            <div className="detail-item">生日：{item.birthday}</div>
-            <div className="detail-item">身高：{item.raise}</div>
-            <div className="detail-item">体重：{item.weight}</div>
-            <div className="detail-item">照片：</div>
+            <div className="detail-item">
+              <ShowItem detail={item.height} />
+            </div>
+            <div className="detail-item">
+              <ShowItem detail={item.weight} />
+            </div>
+            <div className="detail-item">
+              <ShowItem detail={item.image} />
+            </div>
           </div>
         )
       },
@@ -51,9 +63,9 @@ const UserList = () => {
       render: (_, item: PeopleItem) => {
         return (
           <div className="btns-wrap">
-            <Button onClick={() => navigate(`/user/detail/1`)}>详情</Button>
-            <Button>修改</Button>
-            <Button onClick={() => deletePeople(item)}>删除</Button>
+            <div onClick={() => {navigate(`/user/detail/1`);window.location.reload()}}>详情</div>
+            <div>修改</div>
+            <div onClick={() => deletePeople(item)}>删除</div>
           </div>
         )
       },

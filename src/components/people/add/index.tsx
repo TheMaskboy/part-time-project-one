@@ -25,7 +25,7 @@ const PeopleAdd = forwardRef(
       },
       {
         title: '用户名称',
-        dataIndex: 'name',
+        dataIndex: 'nickname',
         key: '2',
         width: 100,
       },
@@ -53,7 +53,7 @@ const PeopleAdd = forwardRef(
         selectPeoples(selectedRows)
       },
       getCheckboxProps: (record: PeopleItem) => ({
-        name: record.name,
+        name: record.nickname,
       }),
     }
 
