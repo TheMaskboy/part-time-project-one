@@ -111,7 +111,8 @@ const ProjectCreate = () => {
         desc,
         startTime: dayjs(cycle[0]).format("YYYY-MM-DD"),
         endTime: dayjs(cycle[1]).format("YYYY-MM-DD"),
-        peopleIds: selectCurrentPeople.map(item => item.id)
+        peopleIds: selectCurrentPeople.map(item => item.id),
+        imageUrl: ""
       }
       apiPostProjectCreate(params).then(() => {
         message.success("创建成功")

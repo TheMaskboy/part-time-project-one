@@ -43,7 +43,6 @@ const PeopleAdd = forwardRef(
 
     useEffect(() => {
       if (!peopleIds || peopleIds.length === 0) return
-      console.log(peopleIds)
       setSelectedRowKeys(peopleIds)
     }, [peopleIds])
 
