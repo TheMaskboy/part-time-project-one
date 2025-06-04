@@ -89,7 +89,7 @@ const ProjectDetail = () => {
         }
       >
         <PeopleAdd
-          list={peopleList}
+          // list={peopleList}
           ref={childRef}
           selectPeoples={selectPeoples}
         />

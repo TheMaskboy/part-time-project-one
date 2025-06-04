@@ -2,18 +2,18 @@ import type { AxiosResponse } from 'axios'
 import axios from '../utils/http'
 
 interface Response<R> {
-  code: string
+  code: number
   data: R
-  message: string
+  msg: string
 }
 
 //处理业务上的通用代码
 const handleServerResponse = <R>(res: AxiosResponse<Response<R>>) => {
   switch (res.data.code) {
-    case '0':
+    case 200:
       return res.data.data
     default:
-      return Promise.reject({ code: res.data.code, message: res.data.message })
+      return Promise.reject({ code: res.data.code, msg: res.data.msg })
   }
 }
 

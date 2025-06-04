@@ -10,3 +10,14 @@ export interface ProjectItem {
   startTime: string // 开始时间
   endTime: string// 结束时间
 }
+
+
+export interface ProjectCreateReq {
+  id?: number
+  name: string
+  imageUrl?: string
+  desc: string
+  startTime: string
+  endTime: string
+  peopleIds: number[]
+}

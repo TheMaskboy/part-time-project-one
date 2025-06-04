@@ -90,6 +90,14 @@ const Routes: AppRoute[] = [
             isShowMenu: true,
           },
           {
+            path: 'update/:id',
+            name: '修改用户',
+            auth: true,
+            role: ['creator', 'admin'],
+            element: <UserCreate />,
+            isShowMenu: true,
+          },
+          {
             path: 'detail/:id',
             name: '用户详情',
             auth: true,

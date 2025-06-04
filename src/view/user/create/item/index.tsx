@@ -4,7 +4,8 @@ import "./style.scss"
 
 type ItemType = {
     value: string,
-    isPublic: number
+    name: string
+    show: number
 }
 
 interface PropsType {
@@ -22,14 +23,15 @@ const PeopleEidtItem = ({ value, onChange, name }: PropsType) => {
             setInputValue(value.value)
         }
 
-        setIsPublic(value?.isPublic === 1)
+        setIsPublic(value?.show === 1)
 
     }, [value])
 
     useEffect(() => {
         onChange && onChange({
+            name,
             value: inputValue,
-            isPublic: !!isPublicValue ? 1 : 0
+            show: !!isPublicValue ? 1 : 0
         })
     }, [inputValue, isPublicValue])
 

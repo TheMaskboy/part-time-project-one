@@ -3,18 +3,22 @@ import {
   DatePicker,
   Form,
   Input,
+  message,
   Modal,
   Table,
   type TableProps,
 } from 'antd'
 import dayjs from 'dayjs'
 import './style.scss'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import PeopleAdd from '../../../components/people/add'
 import type { PeopleItem } from '../../../type/people'
+import { apiPostProjectCreate } from '../../../api/project'
+import { useNavigate } from 'react-router-dom'
+import { getUserList } from '../../../api/user'
 interface FormType {
   name: string
-  description: string
+  desc: string
   cycle: string[]
 }
 
@@ -30,6 +34,8 @@ const ProjectCreate = () => {
     []
   )
   const childRef = useRef({}) as React.MutableRefObject<any>
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate()
 
   const columns: TableProps<PeopleItem>['columns'] = [
     {
@@ -55,7 +61,6 @@ const ProjectCreate = () => {
       render: (_, item: PeopleItem) => {
         return (
           <div className="detail">
-            <div className="detail-item">年龄：{item.age}</div>
             <div className="detail-item">生日：{item.birthday}</div>
             <div className="detail-item">身高：{item.height.value}</div>
             <div className="detail-item">体重：{item.weight.value}</div>
@@ -72,7 +77,7 @@ const ProjectCreate = () => {
       align: 'center',
       render: (_, item: PeopleItem) => {
         return (
-          <div style={{cursor:"pointer"}} onClick={() => deletePeople(item)}>
+          <div style={{ cursor: "pointer" }} onClick={() => deletePeople(item)}>
             删除
           </div>
         )
@@ -96,16 +101,51 @@ const ProjectCreate = () => {
     setSelectCurrentPeople(selectPeople)
   }
 
+  const onSubmit = () => {
+    form.validateFields().then((res) => {
+      setLoading(true)
+      const { name, cycle, desc } = res
+      const params = {
+        name,
+        desc,
+        startTime: dayjs(cycle[0]).format("YYYY-MM-DD"),
+        endTime: dayjs(cycle[1]).format("YYYY-MM-DD"),
+        peopleIds: selectCurrentPeople.map(item => item.id)
+      }
+      apiPostProjectCreate(params).then(() => {
+        message.success("创建成功")
+        navigate("/project/list")
+      }).finally(() => {
+        setLoading(false)
+      })
+    })
+  }
+
   return (
     <div className='create'>
       <Form style={{ width: '400px' }} form={form}>
-        <Form.Item name="name" required label="项目名称">
+        <Form.Item name="name" label="项目名称" rules={[
+          {
+            required: true,
+            message: '请选择项目名称',
+          },
+        ]}>
           <Input placeholder="请输入项目名称" />
         </Form.Item>
-        <Form.Item name="description" required label="项目简介">
+        <Form.Item name="desc" label="项目简介" rules={[
+          {
+            required: true,
+            message: '请选择项目名称',
+          },
+        ]}>
           <Input.TextArea placeholder="请输入项目简介" />
         </Form.Item>
-        <Form.Item name="cycle" required label="项目周期">
+        <Form.Item name="cycle" label="项目周期" rules={[
+          {
+            required: true,
+            message: '请选择项目周期',
+          },
+        ]}>
           <RangePicker
             minDate={dayjs(dayjs().subtract(0, 'day'))}
             format="YYYY-MM-DD"
@@ -128,8 +168,7 @@ const ProjectCreate = () => {
         bordered
       />
       <div className="btns">
-        <Button type="primary">提交</Button>
-        <Button>取消</Button>
+        <Button type="primary" loading={loading} onClick={onSubmit}>提交</Button>
       </div>
       <Modal
         title="添加人员"

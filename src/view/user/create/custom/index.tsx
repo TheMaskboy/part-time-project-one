@@ -23,7 +23,7 @@ const Custom = ({
       setIsPublic(customList[index]?.show === 1)
     }
     console.log(customList)
-  }, [customList, custom])
+  }, [])
 
   useEffect(() => {
     const obj = {

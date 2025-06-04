@@ -1,16 +1,21 @@
-import { Button, Input, Modal, Table, type TableProps } from 'antd'
+import { Button, Input, message, Modal, Spin, Table, type TableProps } from 'antd'
 import { useEffect, useState } from 'react'
 import type { PeopleItem } from '../../../type/people'
 import './style.scss'
-import { PeopleList } from '../../../mock/people'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import ShowItem from './show-item'
-import { getUserList } from '../../../api/user'
+import { apiPostDeleteUser, getUserList } from '../../../api/user'
+import { queryUrl } from '../../../utils/function'
 
 const UserList = () => {
   const [searchValue, setSearchValue] = useState('')
+  const [searchId, setSearchId] = useState('')
   const navigate = useNavigate()
-  const [list, setList] = useState<PeopleItem[]>(PeopleList)
+  const [list, setList] = useState<PeopleItem[]>([])
+  const pageNumber = new URLSearchParams(useLocation().search).get("pageNumber") || 1
+  const nickname = new URLSearchParams(useLocation().search).get("nickname") || ""
+  const id = new URLSearchParams(useLocation().search).get("id") || ""
+  const [loading, setLoading] = useState(false)
   const columns: TableProps<PeopleItem>['columns'] = [
     {
       title: '用户ID',
@@ -42,15 +47,29 @@ const UserList = () => {
       render: (_, item: PeopleItem) => {
         return (
           <div className="detail">
-            <div className="detail-item">
-              <ShowItem detail={item.height} />
-            </div>
-            <div className="detail-item">
-              <ShowItem detail={item.weight} />
-            </div>
-            <div className="detail-item">
-              <ShowItem detail={item.image} />
-            </div>
+            {
+              !!item.height && <div className="detail-item">
+                <ShowItem detail={item.height} />
+              </div>
+            }
+            {
+              !!item.weight && <div className="detail-item">
+                <ShowItem detail={item.weight} />
+              </div>
+            }
+
+            {
+              !!item.image && <div className="detail-item">
+                <ShowItem detail={item.image} />
+              </div>
+            }
+            {
+              !!item.propertyVos && item.propertyVos.length > 0 && item.propertyVos.map(item => {
+                return <div key={item.name} className="detail-item">
+                  <ShowItem detail={item} />
+                </div>
+              })
+            }
           </div>
         )
       },
@@ -64,8 +83,8 @@ const UserList = () => {
       render: (_, item: PeopleItem) => {
         return (
           <div className="btns-wrap">
-            <div onClick={() => { navigate(`/user/detail/1`); window.location.reload() }}>详情</div>
-            <div>修改</div>
+            <div onClick={() => { navigate(`/user/detail/${item.id}`); window.location.reload() }}>详情</div>
+            <div onClick={() => navigate(`/user/update/${item.id}`)}>修改</div>
             <div onClick={() => deletePeople(item)}>删除</div>
           </div>
         )
@@ -74,9 +93,24 @@ const UserList = () => {
   ]
 
   useEffect(() => {
-    console.log(111)
-    getUserList()
-  }, [])
+    getUserListMth()
+    setSearchId(id)
+    setSearchValue(nickname)
+  }, [pageNumber, nickname, id])
+
+  const getUserListMth = () => {
+    setLoading(true)
+    getUserList({
+      current: Number(pageNumber),
+      size: 10,
+      id: searchId || id,
+      nickname: searchValue || nickname
+    }).then(res => {
+      setList(res.records)
+    }).finally(() => {
+      setLoading(false)
+    })
+  }
 
   const deletePeople = (detail: PeopleItem) => {
     Modal.confirm({
@@ -85,11 +119,17 @@ const UserList = () => {
       okText: '确定',
       cancelText: '取消',
       onOk: () => {
-        const index = list.findIndex((item) => item.id === detail.id)
-        list.splice(index, 1)
-        setList([...list])
+        apiPostDeleteUser(detail.id).then(()=>{
+          message.success("删除成功")
+          getUserListMth()
+        })
       },
     })
+  }
+
+  const onSubmit = () => {
+    const query = queryUrl({ nickname: searchValue, id: searchId })
+    navigate(`?${query}`)
   }
 
   return (
@@ -98,19 +138,27 @@ const UserList = () => {
         <div className="inner">
           <span>用户ID/昵称：</span>
           <Input
+            value={searchId}
+            onChange={(e) => setSearchId(e.target.value)}
+            width={200}
+            placeholder="请输入用户ID"
+          />
+          <Input
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
             width={200}
-            placeholder="请输入项目名称"
+            placeholder="请输入用户昵称"
           />
-          <Button type="primary">查询</Button>
+          <Button type="primary" onClick={onSubmit}>查询</Button>
           <Button>重置</Button>
         </div>
         <Button onClick={() => navigate(`/user/create`)} type="primary">
           新增人员
         </Button>
       </div>
-      <Table<PeopleItem> columns={columns} dataSource={list} bordered />
+      <Spin spinning={loading}>
+        <Table<PeopleItem> columns={columns} dataSource={list} bordered />
+      </Spin>
     </div>
   )
 }

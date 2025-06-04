@@ -1,6 +1,7 @@
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 import './style.scss'
-import { apiPostLogin } from '../../api/user'
+import { apiPostLogin, getUserDetail } from '../../api/user'
+import { useNavigate } from 'react-router-dom'
 
 const UserLogin = () => {
   type UserLoginType = {
@@ -8,12 +9,19 @@ const UserLogin = () => {
     password: string
   }
 
+  const navigate = useNavigate()
+
   const [form] = Form.useForm<UserLoginType>()
 
   const submit = () => {
-    form.validateFields().then((res) => {
+    form.validateFields().then(async (res) => {
       const { account, password } = res
-      apiPostLogin({ account, password })
+      const returnCode = await apiPostLogin({ account, password })
+      localStorage.setItem("auth_token", String(returnCode))
+      message.success("登录成功")
+      const detail = await getUserDetail()
+      localStorage.setItem("userDetail", JSON.stringify(detail))
+      navigate("/", { replace: true })
     })
   }
 

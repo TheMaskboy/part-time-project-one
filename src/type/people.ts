@@ -1,11 +1,12 @@
 export interface PeopleItem {
   nickname: string // 用户名称
   id: number // 用户ID
-  age: string // 年龄
+  ids: number[]
   birthday: string // 生日
   height: CustomType // 身高
   weight: CustomType // 体重
   image: CustomType // 照片
+  propertyVos: CustomType[]
 }
 
 export interface LoginPeopleItem {
@@ -22,24 +23,16 @@ export interface CustomType {
   name: string
   value: string
   show: number
+  peopleId?: number
 }
 
 export interface PeopleEditType {
   nickname: string // 用户名称
-  id: number // 用户ID
-  age: string // 年龄
+  id?: number // 用户ID
   birthday: string // 生日
-  propertyVos: CustomType[]
-  height: {
-    // 身高
-    value: string
-    isPubilc: number // 0 隐藏 1 公开
-  }
-  weight: {
-    // 体重
-    value: string
-    isPubilc: number // 0 隐藏 1 公开
-  }
+  height: CustomType
+  weight: CustomType
+  image?: CustomType
 }
 
 export interface PeopleLookCount {
@@ -62,4 +55,16 @@ export interface PeopleDetailType {
 export interface LoginRequest {
   account: string
   password: string
+}
+
+export interface UserLoginDetailType {
+  id: number
+  account: string
+}
+
+export interface apiGetUserListRequest {
+  current: number
+  size: number
+  id?: string
+  nickname?: string
 }

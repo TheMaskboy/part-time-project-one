@@ -3,18 +3,28 @@ import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import './style.scss'
 import type { PeopleItem } from '../../../type/people'
 import { PeopleList } from '../../../mock/people'
+import { getUserList } from '../../../api/user'
 
 const PeopleAdd = forwardRef(
   (
     {
       selectPeoples,
-      list,
-    }: { list?: PeopleItem[]; selectPeoples: (value: PeopleItem[]) => void },
+    }: { selectPeoples: (value: PeopleItem[]) => void },
     ref
   ) => {
     const [searchValue, setSearchValue] = useState('')
+    const [searchId, setSearchId] = useState('')
 
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+
+    const [list, setList] = useState<PeopleItem[]>()
+    const [pageNumber, setPageNumber] = useState(1)
+
+    useEffect(() => {
+      getUserList({ current: pageNumber, size: 5, id: searchId, nickname: searchValue }).then().then(res => {
+        setList(res.records)
+      })
+    }, [])
 
     const columns: TableProps<PeopleItem>['columns'] = [
       {

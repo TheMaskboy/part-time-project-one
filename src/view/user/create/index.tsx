@@ -1,26 +1,33 @@
-import { Button, DatePicker, Form, Input, Modal } from 'antd'
+import { Button, DatePicker, Form, Input, message, Modal } from 'antd'
 import type { CustomType, PeopleEditType } from '../../../type/people'
 import PeopleEidtItem from './item'
 import UserImage from './userImage'
 import './style.scss'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Custom from './custom'
+import { apiGetUserDetail, apiPostCreateUser } from '../../../api/user'
+import dayjs from 'dayjs'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const UserCreate = () => {
   interface PeopleType extends PeopleEditType {
-    photo: {
+    photo?: {
       image: {
         imgUrl?: string
         file?: Blob
       }[]
     }
-    propertyVos: CustomType[]
+    propertyVos?: CustomType[]
   }
+
+  const navigate = useNavigate()
 
   const [form] = Form.useForm<PeopleType>()
   const [isShowModal, setIsShowModal] = useState(false)
   const [addMessage, setAddMessage] = useState('')
   const [customList, setCustomList] = useState<CustomType[]>([])
+  const [loading, setLoading] = useState(false)
+  const id = useParams()?.id
 
   const onClickSubmit = () => {
     const arr = {
@@ -33,9 +40,41 @@ const UserCreate = () => {
     setIsShowModal(false)
   }
 
+  useEffect(() => {
+    if (!id) return
+    apiGetUserDetail(Number(id)).then(res => {
+      const { nickname, birthday, height, weight, propertyVos } = res
+      form.setFieldValue("nickname", nickname)
+      form.setFieldValue("birthday", dayjs(birthday))
+      form.setFieldValue("height", height)
+      form.setFieldValue("weight", weight)
+      setCustomList(propertyVos)
+    })
+  }, [id])
+
   const update = () => {
     form.validateFields().then((res) => {
-      console.log(res)
+      setLoading(true)
+      const { nickname, birthday, height, weight } = res
+      const params: PeopleType = {
+        nickname,
+        birthday: dayjs(birthday).format("YYYY-MM-DD"),
+        height,
+        weight,
+        propertyVos: customList
+      }
+      if (!!id) {
+        params.id = Number(id)
+      }
+      apiPostCreateUser(params).then(() => {
+        message.success("修改成功")
+        navigate("/user/list", {
+          replace: true
+
+        })
+      }).finally(() => {
+        setLoading(false)
+      })
     })
   }
 
@@ -47,7 +86,7 @@ const UserCreate = () => {
 
   return (
     <div>
-      <Form style={{ width: '400px' }} form={form}>
+      <Form style={{ width: '400px' }} className='form' form={form}>
         <Form.Item
           label="用户昵称"
           name="nickname"
@@ -70,7 +109,7 @@ const UserCreate = () => {
             },
           ]}
         >
-          <DatePicker format="YYYY-MM-DD" placeholder="请选择生日" />
+          <DatePicker format="YYYY-MM-DD" disabledDate={(current) => current && current > dayjs().endOf('day')} placeholder="请选择生日" />
         </Form.Item>
         <Form.Item
           label="用户身高"
@@ -85,7 +124,7 @@ const UserCreate = () => {
               },
             },
           ]}
-          name="raise"
+          name="height"
           required
         >
           <PeopleEidtItem name="身高" />
@@ -131,7 +170,7 @@ const UserCreate = () => {
           <UserImage />
         </Form.Item>
         <div className="btns">
-          <Button onClick={update} type="primary">
+          <Button onClick={update} type="primary" loading={loading}>
             确定修改
           </Button>
         </div>
@@ -148,7 +187,7 @@ const UserCreate = () => {
           <div
             style={{ display: 'flex', justifyContent: 'center', gap: '20px' }}
           >
-            <Button type="primary" onClick={onClickSubmit}>
+            <Button type="primary" onClick={onClickSubmit} loading={loading}>
               确定
             </Button>
             <Button onClick={() => setIsShowModal(false)}>取消</Button>
