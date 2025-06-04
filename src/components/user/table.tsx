@@ -18,7 +18,7 @@ const UserTable = ({
     },
     {
       title: '用户名称',
-      dataIndex: 'name',
+      dataIndex: 'nickname',
       key: '2',
       width: 100,
       align: 'center',
@@ -32,7 +32,6 @@ const UserTable = ({
       render: (_, item: PeopleItem) => {
         return (
           <div className="detail">
-            <div className="detail-item">年龄：{item.age}</div>
             <div className="detail-item">生日：{item.birthday}</div>
             <div className="detail-item">身高：{item.height.value}</div>
             <div className="detail-item">体重：{item.weight.value}</div>

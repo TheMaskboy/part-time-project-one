@@ -8,8 +8,8 @@ const PeopleAdd = forwardRef(
   (
     {
       selectPeoples,
-      peopleIds
-    }: { selectPeoples: (value: PeopleItem[]) => void, peopleIds?: number[] },
+      peopleIds,
+    }: { selectPeoples: (value: PeopleItem[]) => void; peopleIds?: number[] },
     ref
   ) => {
     const [searchValue, setSearchValue] = useState('')
@@ -21,9 +21,16 @@ const PeopleAdd = forwardRef(
     const [pageNumber, setPageNumber] = useState(1)
 
     useEffect(() => {
-      getUserList({ current: pageNumber, size: 5, id: searchId, nickname: searchValue }).then().then(res => {
-        setPeopleList(res.records)
+      getUserList({
+        current: pageNumber,
+        size: 5,
+        id: searchId,
+        nickname: searchValue,
       })
+        .then()
+        .then((res) => {
+          setPeopleList(res.records)
+        })
     }, [])
 
     const columns: TableProps<PeopleItem>['columns'] = [
@@ -42,7 +49,9 @@ const PeopleAdd = forwardRef(
     ]
 
     useEffect(() => {
+      console.log(peopleIds)
       if (!peopleIds || peopleIds.length === 0) return
+      console.log(123)
       setSelectedRowKeys(peopleIds)
     }, [peopleIds])
 

@@ -1,16 +1,31 @@
-import { Button, Input, Modal, Table, type TableProps } from 'antd'
-import type { ProjectItem } from '../../../type/project'
-import { ProjectLists } from '../../../mock/project'
-import { ProjectStatusList } from '../../../enum/project'
+import { Button, Input, message, Modal, Table, type TableProps } from 'antd'
+import type { ProjectItem, ProjectStatusNum } from '../../../type/project'
+import { ProjectStatusList, ProjuctStatus } from '../../../enum/project'
 import './style.scss'
-import { useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import PeopleAdd from '../../../components/people/add'
 import type { PeopleItem } from '../../../type/people'
+import {
+  apiGetProjectList,
+  apiGetStatusClassStatic,
+  apiPostUpdateProjectStatus,
+} from '../../../api/project'
+import dayjs from 'dayjs'
 
 const ProjectList = () => {
   const [searchValue, setSearchValue] = useState('')
   const navigate = useNavigate()
+  const [projectList, setProjectList] = useState<ProjectItem[]>([])
+  const pageNumber =
+    new URLSearchParams(useLocation().search).get('pageNumber') || 1
+  const name = new URLSearchParams(useLocation().search).get('name') || ''
+  const [projectStatusNum, setProjectStatusNum] = useState<ProjectStatusNum>({
+    noStart: 0,
+    recruit: 0,
+    end: 0,
+  })
+  const [projectAmount, setProjectAmount] = useState(0)
   const columns: TableProps<ProjectItem>['columns'] = [
     {
       title: '序号',
@@ -64,8 +79,11 @@ const ProjectList = () => {
       width: 100,
       align: 'center',
       render: (_, detail: ProjectItem) => (
-        <div>{detail.startTime} - {detail.endTime}</div>
-      )
+        <div>
+          {dayjs(detail.startTime).format('YYYY-MM-DD')} -{' '}
+          {dayjs(detail.endTime).format('YYYY-MM-DD')}
+        </div>
+      ),
     },
     {
       title: '创建时间',
@@ -87,17 +105,57 @@ const ProjectList = () => {
       key: '10',
       width: 150,
       align: 'center',
-      render: (_) => {
-        return (
-          <div className="operate">
-            <span onClick={() => window.open(`/project/detail/1`)}>详情</span>
+      render: (_, detail: ProjectItem) => (
+        <div className="operate">
+          <span onClick={() => window.open(`/project/detail/${detail.id}`)}>
+            详情
+          </span>
+          {detail.status !== ProjuctStatus.END && (
             <span onClick={() => setIsShowModal(true)}>人员增加</span>
-            <span>开始</span>
-          </div>
-        )
-      },
+          )}
+          {detail.status === ProjuctStatus.NOSTART && (
+            <span onClick={() => updateStatus(detail)}>开始</span>
+          )}
+
+          {detail.status === ProjuctStatus.STARTING && (
+            <span onClick={() => updateStatus(detail)}>结束</span>
+          )}
+        </div>
+      ),
     },
   ]
+
+  const updateStatus = (detail: ProjectItem) => {
+    let status = 1
+    if (detail.status === ProjuctStatus.NOSTART) {
+      status = 2
+    } else if (detail.status === ProjuctStatus.STARTING) {
+      status = 3
+    }
+    apiPostUpdateProjectStatus({ id: detail.id, status }).then(() => {
+      message.success('修改成功')
+      getListMth()
+    })
+  }
+
+  useEffect(() => {
+    getListMth()
+    setSearchValue(name)
+  }, [pageNumber, name])
+
+  const getListMth = () => {
+    apiGetProjectList({
+      current: Number(pageNumber),
+      size: 10,
+      name: searchValue || name,
+    }).then((res) => {
+      setProjectList(res.records)
+      setProjectAmount(res.total)
+    })
+    apiGetStatusClassStatic().then((res) => {
+      setProjectStatusNum(res)
+    })
+  }
 
   const [isShowModal, setIsShowModal] = useState(false)
 
@@ -106,7 +164,9 @@ const ProjectList = () => {
   }
 
   const [selectPeople, setSelectPeople] = useState<PeopleItem[]>([])
-  const [_, setSelectCurrentPeople] = useState<PeopleItem[]>([])
+  const [selectCurrentPeople, setSelectCurrentPeople] = useState<PeopleItem[]>(
+    []
+  )
   const selectPeoples = (value: PeopleItem[]) => {
     setSelectPeople(value)
   }
@@ -135,7 +195,17 @@ const ProjectList = () => {
           新建项目
         </Button>
       </div>
-      <Table<ProjectItem> columns={columns} dataSource={ProjectLists} />
+      <div className="status-num">
+        <div className="status-num-item">项目总数：{projectAmount}个</div>
+        <div className="status-num-item">
+          招募中：{projectStatusNum.recruit}个
+        </div>
+        <div className="status-num-item">
+          未开始：{projectStatusNum.noStart}个
+        </div>
+        <div className="status-num-item">已结束：{projectStatusNum.end}个</div>
+      </div>
+      <Table<ProjectItem> columns={columns} dataSource={projectList} />
 
       <Modal
         title="添加人员"
@@ -157,7 +227,11 @@ const ProjectList = () => {
           </div>
         }
       >
-        <PeopleAdd ref={childRef} selectPeoples={selectPeoples} />
+        <PeopleAdd
+          peopleIds={selectCurrentPeople.map((item) => item.id)}
+          ref={childRef}
+          selectPeoples={selectPeoples}
+        />
       </Modal>
     </div>
   )
