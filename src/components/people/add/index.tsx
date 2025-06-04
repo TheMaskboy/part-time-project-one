@@ -2,14 +2,14 @@ import { Button, Input, Table, type TableProps } from 'antd'
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import './style.scss'
 import type { PeopleItem } from '../../../type/people'
-import { PeopleList } from '../../../mock/people'
 import { getUserList } from '../../../api/user'
 
 const PeopleAdd = forwardRef(
   (
     {
       selectPeoples,
-    }: { selectPeoples: (value: PeopleItem[]) => void },
+      peopleIds
+    }: { selectPeoples: (value: PeopleItem[]) => void, peopleIds?: number[] },
     ref
   ) => {
     const [searchValue, setSearchValue] = useState('')
@@ -17,12 +17,12 @@ const PeopleAdd = forwardRef(
 
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
 
-    const [list, setList] = useState<PeopleItem[]>()
+    const [peopleList, setPeopleList] = useState<PeopleItem[]>()
     const [pageNumber, setPageNumber] = useState(1)
 
     useEffect(() => {
       getUserList({ current: pageNumber, size: 5, id: searchId, nickname: searchValue }).then().then(res => {
-        setList(res.records)
+        setPeopleList(res.records)
       })
     }, [])
 
@@ -42,9 +42,10 @@ const PeopleAdd = forwardRef(
     ]
 
     useEffect(() => {
-      if (!list) return
-      setSelectedRowKeys(list.map((item) => item.id))
-    }, [list])
+      if (!peopleIds || peopleIds.length === 0) return
+      console.log(peopleIds)
+      setSelectedRowKeys(peopleIds)
+    }, [peopleIds])
 
     const updatePeople = (value: PeopleItem[]) => {
       setSelectedRowKeys(value.map((item) => item.id))
@@ -88,7 +89,7 @@ const PeopleAdd = forwardRef(
           }}
           columns={columns}
           rowKey="id"
-          dataSource={PeopleList}
+          dataSource={peopleList}
         />
       </div>
     )

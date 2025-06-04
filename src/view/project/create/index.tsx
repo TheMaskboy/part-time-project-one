@@ -10,12 +10,11 @@ import {
 } from 'antd'
 import dayjs from 'dayjs'
 import './style.scss'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import PeopleAdd from '../../../components/people/add'
 import type { PeopleItem } from '../../../type/people'
 import { apiPostProjectCreate } from '../../../api/project'
 import { useNavigate } from 'react-router-dom'
-import { getUserList } from '../../../api/user'
 interface FormType {
   name: string
   desc: string
@@ -27,7 +26,9 @@ const ProjectCreate = () => {
   const { RangePicker } = DatePicker
   const [isShowModal, setIsShowModal] = useState(false)
 
-  const onClickSubmit = () => { }
+  const onClickSubmit = () => {
+    navigate("/user/create")
+  }
 
   const [selectPeople, setSelectPeople] = useState<PeopleItem[]>([])
   const [selectCurrentPeople, setSelectCurrentPeople] = useState<PeopleItem[]>(
@@ -190,7 +191,7 @@ const ProjectCreate = () => {
           </div>
         }
       >
-        <PeopleAdd ref={childRef} selectPeoples={selectPeoples} />
+        <PeopleAdd peopleIds={selectCurrentPeople.map(item => item.id)} ref={childRef} selectPeoples={selectPeoples} />
       </Modal>
     </div>
   )
