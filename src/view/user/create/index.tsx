@@ -55,6 +55,8 @@ const UserCreate = () => {
   const update = () => {
     form.validateFields().then((res) => {
       setLoading(true)
+      console.log(res)
+      return
       const { nickname, birthday, height, weight } = res
       const params: PeopleType = {
         nickname,

@@ -59,20 +59,34 @@ const ImageUpload = (props: ImageUploadProps) => {
     </div>
   )
   const [fileList, setFileList] = useState<UploadFile<{ url: string }>[]>([])
-  const [_, setPreviewVisible] = useState(false)
 
-  const onPreview = () => {
-    setPreviewVisible(true)
-  }
+  const handleChange = (info: any) => {
+    if (info.file.status === 'done') {
+      // 从响应中获取文件链接
+      const fileUrl = info.file.response.data; // 根据你的API响应结构调整
+      // message.success(`${info.file.name} 文件上传成功`);
+      fileList.push({
+        uid: fileUrl,
+        url: fileUrl,
+        name: info.file.name
+      })
+      let result: any = []
+      fileList.forEach(() => {
+        result.push({ imgUrl: fileUrl })
+      })
+      props.onChange?.(result)
+    }
+  };
 
   const onRemove = (e: any) => {
+    console.log(123)
     const index = fileList.findIndex((item) => item.url === e.url)
     fileList.splice(index, 1)
     setFileList([...fileList])
-    const secondIndex = imgUrl.findIndex((item) => item.imgUrl === e.url)
-    imgUrl.splice(secondIndex, 1)
-    setImageUrl([...imgUrl])
-    props.onChange?.([...imgUrl])
+    // const secondIndex = imgUrl.findIndex((item) => item.imgUrl === e.url)
+    // imgUrl.splice(secondIndex, 1)
+    // setImageUrl([...imgUrl])
+    // props.onChange?.([...imgUrl])
   }
   return (
     <div>
@@ -83,15 +97,16 @@ const ImageUpload = (props: ImageUploadProps) => {
           headers={{
             Authorization: localStorage.getItem("auth_token") || "",
           }}
-          beforeUpload={beforeUpload}
+          // beforeUpload={beforeUpload}
           // customRequest={handleCustomFileChange}
           action="/api/upload"
           onRemove={onRemove}
-          fileList={fileList}
-          onPreview={onPreview}
+          onChange={handleChange}
+          // fileList={fileList}
+          // onPreview={onPreview}
           maxCount={(props.limit || 1)}
         >
-          {fileList.length <= 4 ? uploadButton : null}
+          {fileList.length <= (props.limit || 1) ? uploadButton : null}
         </Upload>
       )}
     </div>
