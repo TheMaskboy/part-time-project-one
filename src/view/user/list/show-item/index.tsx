@@ -3,17 +3,21 @@ import type { CustomType } from "../../../../type/people"
 import { useEffect, useState } from "react"
 import "./style.scss"
 
-const ShowItem = ({ detail }: { detail: CustomType }) => {
+const ShowItem = ({ detail, onChangeValue }: { detail: CustomType, onChangeValue: (id: number, show: number) => void }) => {
 
     const [isPublic, setIsPublic] = useState(false)
 
-    useEffect(()=>{
+    useEffect(() => {
         setIsPublic(detail.show === 1)
-    },[detail])
+    }, [detail])
+
+    const onChange = () => {
+        onChangeValue(Number(detail.id), detail.show === 1 ? 0 : 1)
+    }
 
     return <div className="custom-item">
         {detail.name}
-        <Switch checkedChildren="展示" unCheckedChildren="隐藏" value={isPublic} onChange={(e) => setIsPublic(e)} />
+        <Switch checkedChildren="展示" unCheckedChildren="隐藏" value={isPublic} onChange={onChange} />
     </div>
 }
 

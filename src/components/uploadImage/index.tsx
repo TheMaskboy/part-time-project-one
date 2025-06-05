@@ -1,4 +1,4 @@
-import { Upload, message, type UploadFile } from 'antd'
+import { Upload, message, type UploadFile, type UploadProps } from 'antd'
 import { useEffect, useState } from 'react'
 import { RiAddLine, RiLoader2Line } from 'react-icons/ri'
 import { isFileOversized } from '../../utils/function'
@@ -22,13 +22,7 @@ const ImageUpload = (props: ImageUploadProps) => {
       file?: File
     }[]
   >([])
-  const [loading] = useState<boolean>(false)
-
-  // const triggerChange = (changedValue: { imgUrl?: string; file?: File }) => {
-  //   imgUrl.push(changedValue)
-  //   setImageUrl([...imgUrl])
-  //   props.onChange?.(imgUrl)
-  // }
+  const [loading, setLoading] = useState<boolean>(false)
 
   useEffect(() => {
     setImageUrl(props.value ?? [])
@@ -46,61 +40,17 @@ const ImageUpload = (props: ImageUploadProps) => {
     }
   }, [props.value])
 
-  const handleCustomFileChange = async (options: any) => {
-	const { file } = options;
-	if (props.limitSize && isFileOversized(file, props.limitSize)) {
+  const beforeUpload = (file: File) => {
+    const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+    if (!isJpgOrPng) {
+      message.error('You can only upload JPG/PNG file!');
+      return false
+    }
+    if (props.limitSize && isFileOversized(file, props.limitSize)) {
       message.warning(`上传文件大小不能超过${props.limitSize}M,请检查后重新上传`, 3);
       return false;
     }
-	if (file) {
-		console.log(file)
-	}
-  }
-
-  // const beforeUpload = (file: File) => {
-  //   // setLoading(true)
-  //   const isJpgOrPng =
-  //     file.type === 'image/jpeg' ||
-  //     file.type === 'image/png' ||
-  //     file.type === 'image/gif'
-  //   if (!isJpgOrPng) {
-  //     message.error('只允许上传 JPG/PNG/GIF 格式的文件!')
-  //     setLoading(false)
-  //     return
-  //   }
-  //   let isLimit = true
-  //   if (props.limit) {
-  //     isLimit = file.size / 1024 / 1024 < props?.limit!
-  //     if (!isLimit) {
-  //       message.error('照片大小超出限制')
-  //       setLoading(false)
-  //       return
-  //     }
-  //   }
-
-  //   if (isJpgOrPng && isLimit) {
-  //     const reader = new FileReader()
-
-  //     reader.addEventListener('load', () => {
-  //       let Img = new Image()
-  //       Img.onload = () => {
-  //         fileList.push({
-  //           uid: String(fileList.length + 1),
-  //           url: reader.result as string,
-  //           name: file.name,
-  //         })
-  //         setFileList([...fileList])
-  //         triggerChange({
-  //           imgUrl: reader.result as string,
-  //           file: file,
-  //         })
-  //       }
-  //       Img.src = reader.result as string
-  //     })
-  //     reader.readAsDataURL(file)
-  //   }
-  //   return false
-  // }
+  };
 
   const uploadButton = (
     <div>
@@ -126,15 +76,20 @@ const ImageUpload = (props: ImageUploadProps) => {
   }
   return (
     <div>
-      {fileList.length <= 4 && (
+      {fileList.length <= (props.limit || 1) && (
         <Upload
           listType="picture-card"
-        //   beforeUpload={beforeUpload}
-		  customRequest={handleCustomFileChange}
+          name='file'
+          headers={{
+            Authorization: localStorage.getItem("auth_token") || "",
+          }}
+          beforeUpload={beforeUpload}
+          // customRequest={handleCustomFileChange}
+          action="/api/upload"
           onRemove={onRemove}
           fileList={fileList}
           onPreview={onPreview}
-          maxCount={4}
+          maxCount={(props.limit || 1)}
         >
           {fileList.length <= 4 ? uploadButton : null}
         </Upload>

@@ -1,9 +1,12 @@
 import { Delete, get, post } from '.'
 import type { PaginationResponse } from '../type/axios'
+import type { PeopleItem } from '../type/people'
 import type {
   ProjectCreateReq,
+  ProjectEditPeopleReq,
   ProjectItem,
   ProjectListReq,
+  ProjectPeopleListReq,
   ProjectStatusNum,
   ProjectUpdateStatusReq,
 } from '../type/project'
@@ -28,3 +31,19 @@ export const apiPostDeleteProject = (id: number) =>
 
 export const apiGetStatusClassStatic = () =>
   get<{}, ProjectStatusNum>('/api/project/statusClassStatic')
+
+// 查询项目参与人员
+export const apiGetPeopleOfProject = (params: ProjectPeopleListReq) =>
+  get<ProjectPeopleListReq, PaginationResponse<PeopleItem>>('/api/people/queryProjectPeoplePage', params)
+
+// 删除项目参与人员
+export const apiPostDeletePeopleOfProject = (params: ProjectEditPeopleReq) =>
+  post<ProjectEditPeopleReq, {}>(`/api/project/batchDeletePeople`, params)
+
+// 增加项目参与人员
+export const apiPostAddPeopleOfProject = (params: ProjectEditPeopleReq) =>
+  post<ProjectEditPeopleReq, {}>('/api/project/batchAddPeople', params)
+
+// 上传图片
+export const apiPostUploadImage = (file: File) =>
+  post<{ file: File }, string>('/api/upload', { file })

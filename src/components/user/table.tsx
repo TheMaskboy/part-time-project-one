@@ -1,4 +1,4 @@
-import { Button, Table, type TableProps } from 'antd'
+import { Table, type TableProps } from 'antd'
 import type { PeopleItem } from '../../type/people'
 
 const UserTable = ({
@@ -33,8 +33,21 @@ const UserTable = ({
         return (
           <div className="detail">
             <div className="detail-item">生日：{item.birthday}</div>
-            <div className="detail-item">身高：{item.height.value}</div>
-            <div className="detail-item">体重：{item.weight.value}</div>
+            {
+              !!item.height.show && <div className="detail-item">身高：{item.height.value}</div>
+            }
+            {
+              !!item.weight.show && <div className="detail-item">体重：{item.weight.value}</div>
+            }
+            {
+              item.propertyVos.map(detail => {
+                return <>
+                  {
+                    detail.show && <div key={item.id} className="detail-item">{detail.name}：{detail.value}</div>
+                  }
+                </>
+              })
+            }
             <div className="detail-item">照片：</div>
           </div>
         )
@@ -48,9 +61,9 @@ const UserTable = ({
       align: 'center',
       render: (_, item: PeopleItem) => {
         return (
-          <Button type="primary" onClick={() => deletePeople(item)}>
+          <div style={{cursor:"pointer"}} onClick={() => deletePeople(item)}>
             删除
-          </Button>
+          </div>
         )
       },
     },

@@ -9,6 +9,8 @@ export interface ProjectItem {
   createName: string // 创建人
   startTime: string // 开始时间
   endTime: string // 结束时间
+  loginUserNum: number
+  peopleIds: number[]
 }
 
 export interface ProjectCreateReq {
@@ -36,4 +38,15 @@ export interface ProjectStatusNum {
   noStart: number
   recruit: number
   end: number
+}
+
+export interface ProjectPeopleListReq {
+  current: number
+  size: number
+  projectId: number
+}
+
+export interface ProjectEditPeopleReq {
+  peopleIds: number[]
+  id: number
 }

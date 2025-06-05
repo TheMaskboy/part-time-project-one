@@ -4,7 +4,7 @@ import type { PeopleItem } from '../../../type/people'
 import './style.scss'
 import { useLocation, useNavigate } from 'react-router-dom'
 import ShowItem from './show-item'
-import { apiPostDeleteUser, getUserList } from '../../../api/user'
+import { apiPostDeleteUser, apiPostUpdatePropertyShow, getUserList } from '../../../api/user'
 import { queryUrl } from '../../../utils/function'
 
 const UserList = () => {
@@ -13,9 +13,11 @@ const UserList = () => {
   const navigate = useNavigate()
   const [list, setList] = useState<PeopleItem[]>([])
   const pageNumber = new URLSearchParams(useLocation().search).get("pageNumber") || 1
+  const pageSize = new URLSearchParams(useLocation().search).get("pageSize") || 10
   const nickname = new URLSearchParams(useLocation().search).get("nickname") || ""
   const id = new URLSearchParams(useLocation().search).get("id") || ""
   const [loading, setLoading] = useState(false)
+  const [total, setTotal] = useState(0)
   const columns: TableProps<PeopleItem>['columns'] = [
     {
       title: '用户ID',
@@ -49,24 +51,24 @@ const UserList = () => {
           <div className="detail">
             {
               !!item.height && <div className="detail-item">
-                <ShowItem detail={item.height} />
+                <ShowItem onChangeValue={onChangeValue} detail={item.height} />
               </div>
             }
             {
               !!item.weight && <div className="detail-item">
-                <ShowItem detail={item.weight} />
+                <ShowItem onChangeValue={onChangeValue} detail={item.weight} />
               </div>
             }
 
             {
               !!item.image && <div className="detail-item">
-                <ShowItem detail={item.image} />
+                <ShowItem onChangeValue={onChangeValue} detail={item.image} />
               </div>
             }
             {
               !!item.propertyVos && item.propertyVos.length > 0 && item.propertyVos.map(item => {
                 return <div key={item.name} className="detail-item">
-                  <ShowItem detail={item} />
+                  <ShowItem onChangeValue={onChangeValue} detail={item} />
                 </div>
               })
             }
@@ -92,21 +94,32 @@ const UserList = () => {
     },
   ]
 
+  const onChangeValue = (id: number, show: number) => {
+    setLoading(true)
+    apiPostUpdatePropertyShow({ propertyId: id, show }).then(res => {
+      message.success("修改成功")
+      getUserListMth()
+    }).catch(()=>{
+      setLoading(false)
+    })
+  }
+
   useEffect(() => {
     getUserListMth()
     setSearchId(id)
     setSearchValue(nickname)
-  }, [pageNumber, nickname, id])
+  }, [pageNumber, nickname, id, pageSize])
 
   const getUserListMth = () => {
     setLoading(true)
     getUserList({
       current: Number(pageNumber),
-      size: 10,
+      size: Number(pageSize),
       id: searchId || id,
       nickname: searchValue || nickname
     }).then(res => {
       setList(res.records)
+      setTotal(res.total)
     }).finally(() => {
       setLoading(false)
     })
@@ -119,7 +132,7 @@ const UserList = () => {
       okText: '确定',
       cancelText: '取消',
       onOk: () => {
-        apiPostDeleteUser(detail.id).then(()=>{
+        apiPostDeleteUser(detail.id).then(() => {
           message.success("删除成功")
           getUserListMth()
         })
@@ -129,6 +142,22 @@ const UserList = () => {
 
   const onSubmit = () => {
     const query = queryUrl({ nickname: searchValue, id: searchId })
+    navigate(`?${query}`)
+  }
+
+  const reset = () => {
+    setSearchId("")
+    setSearchValue("")
+    navigate(`/user/list`)
+  }
+
+  const onChangePage = (e: number) => {
+    const query = queryUrl({ pageNumber: e })
+    navigate(`?${query}`)
+  }
+
+  const onShowSizeChange = (current: number, size: number) => {
+    const query = queryUrl({ pageNumber: current, pageSize: size })
     navigate(`?${query}`)
   }
 
@@ -150,14 +179,14 @@ const UserList = () => {
             placeholder="请输入用户昵称"
           />
           <Button type="primary" onClick={onSubmit}>查询</Button>
-          <Button>重置</Button>
+          <Button onClick={reset}>重置</Button>
         </div>
         <Button onClick={() => navigate(`/user/create`)} type="primary">
           新增人员
         </Button>
       </div>
       <Spin spinning={loading}>
-        <Table<PeopleItem> columns={columns} dataSource={list} bordered />
+        <Table<PeopleItem> columns={columns} dataSource={list} bordered pagination={{ total, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }} />
       </Spin>
     </div>
   )

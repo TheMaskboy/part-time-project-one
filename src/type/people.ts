@@ -24,6 +24,7 @@ export interface CustomType {
   value: string
   show: number
   peopleId?: number
+  id?: number
 }
 
 export interface PeopleEditType {
@@ -67,4 +68,10 @@ export interface apiGetUserListRequest {
   size: number
   id?: string
   nickname?: string
+  projectId?: number
+}
+
+export interface UpdatePropertyReq {
+  propertyId: number // 用户ID
+  show: number
 }
