@@ -1,6 +1,6 @@
 import { Delete, get, post } from '.'
 import type { PaginationResponse } from '../type/axios'
-import type { apiGetUserListRequest, LoginRequest, PeopleEditType, PeopleItem, UpdatePropertyReq, UserLoginDetailType } from '../type/people'
+import type { apiGetUserListRequest, LoginRequest, LoginUserListItem, LoginUserListReq, PeopleEditType, PeopleItem, UpdatePropertyReq, UserLoginDetailType } from '../type/people'
 
 export const getUserList = (params: apiGetUserListRequest) => {
   return get<apiGetUserListRequest, PaginationResponse<PeopleItem>>(`/api/people/queryPage`, params)
@@ -23,9 +23,11 @@ export const apiPostCreateUser = (params: PeopleEditType) =>
 export const apiGetUserDetail = (id: number) =>
   get<{ id: number }, PeopleItem>('/api/people/queryById', { id })
 
-
 export const apiPostDeleteUser = (id: number) =>
   Delete<{ id: number }, {}>(`/api/people/delete?id=${id}`)
 
 export const apiPostUpdatePropertyShow = (params: UpdatePropertyReq) =>
   post<UpdatePropertyReq, {}>("/api/people/updatePropertyShow", params)
+
+export const apiGetLoginUserList = (params:LoginUserListReq) =>
+  get<LoginUserListReq, PaginationResponse<LoginUserListItem>>('/api/loginUser/queryPage', params)

@@ -10,12 +10,13 @@ const PeopleAdd = forwardRef(
       projectId,
       updatePeopleIds,
       peopleIds,
-    }: { updatePeopleIds: (value: number[]) => void; peopleIds?: number[], projectId?: number },
+    }: { updatePeopleIds: (value: number[], row?: PeopleItem[]) => void; peopleIds?: number[], projectId?: number },
     ref
   ) => {
     const [searchValue, setSearchValue] = useState('')
     const [searchId, setSearchId] = useState('')
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([])
+    const [_, setSelectedRows] = useState<PeopleItem[]>([])
     const [peopleList, setPeopleList] = useState<PeopleItem[]>()
     const [pageNumber, setPageNumber] = useState(1)
     const [total, setTotal] = useState(1)
@@ -29,13 +30,13 @@ const PeopleAdd = forwardRef(
     }
 
     useEffect(() => {
-      if (!projectId) return
       getUserListMth()
     }, [pageNumber, pageSize, projectId])
 
     const getUserListMth = (init?: boolean) => {
       setLoading(true)
-      getProjectUserList(init ? paramsInit : {
+      const func = !!projectId ? getProjectUserList : getUserList
+      func(init ? paramsInit : {
         current: pageNumber,
         size: pageSize,
         id: searchId,
@@ -82,9 +83,10 @@ const PeopleAdd = forwardRef(
     const [selectionType] = useState<'checkbox' | 'radio'>('checkbox')
 
     const rowSelection: TableProps<PeopleItem>['rowSelection'] = {
-      onChange: (selectedKeys) => {
+      onChange: (selectedKeys, selectedRows) => {
         setSelectedRowKeys(selectedKeys)
-        updatePeopleIds(selectedKeys.map(item => Number(item)))
+        setSelectedRows(selectedRows)
+        updatePeopleIds && updatePeopleIds(selectedKeys.map(item => Number(item)), selectedRows)
       },
       getCheckboxProps: (record: PeopleItem) => ({
         id: String(record.id),
@@ -143,7 +145,7 @@ const PeopleAdd = forwardRef(
           columns={columns}
           rowKey="id"
           dataSource={peopleList}
-          pagination={{ total, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }}
+          pagination={{ total, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), showQuickJumper: true, current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }}
         />
       </div>
     )

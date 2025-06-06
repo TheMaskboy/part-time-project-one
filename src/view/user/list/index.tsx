@@ -96,10 +96,10 @@ const UserList = () => {
 
   const onChangeValue = (id: number, show: number) => {
     setLoading(true)
-    apiPostUpdatePropertyShow({ propertyId: id, show }).then(res => {
+    apiPostUpdatePropertyShow({ propertyId: id, show }).then(() => {
       message.success("修改成功")
       getUserListMth()
-    }).catch(()=>{
+    }).catch(() => {
       setLoading(false)
     })
   }
@@ -186,7 +186,7 @@ const UserList = () => {
         </Button>
       </div>
       <Spin spinning={loading}>
-        <Table<PeopleItem> columns={columns} dataSource={list} bordered pagination={{ total, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }} />
+        <Table<PeopleItem> columns={columns} dataSource={list} bordered pagination={{ total, showQuickJumper: true, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }} />
       </Spin>
     </div>
   )

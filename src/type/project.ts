@@ -50,3 +50,13 @@ export interface ProjectEditPeopleReq {
   peopleIds: number[]
   id: number
 }
+
+export interface LookUserOfProjectReq {
+  projectId: number
+  current: number
+  size: number
+}
+
+export interface LookUserOfProjectItem {
+  id: number
+}

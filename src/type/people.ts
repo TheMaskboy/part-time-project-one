@@ -9,16 +9,6 @@ export interface PeopleItem {
   propertyVos: CustomType[]
 }
 
-export interface LoginPeopleItem {
-  nickname: string // 用户名称
-  id: number // 用户ID
-  age: string // 年龄
-  birthday: string // 生日
-  height: CustomType // 身高
-  weight: CustomType // 体重
-  image: CustomType // 照片
-}
-
 export interface CustomType {
   name: string
   value: string
@@ -74,4 +64,20 @@ export interface apiGetUserListRequest {
 export interface UpdatePropertyReq {
   propertyId: number // 用户ID
   show: number
+}
+
+
+export interface LoginUserListReq {
+  phone?: string
+  nickname?: string
+  current: number
+  size: number
+}
+
+export interface LoginUserListItem {
+  id: number
+  ids: number[]
+  phone: string
+  nickname: string
+  lastLoginTime: string
 }

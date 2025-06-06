@@ -54,7 +54,6 @@ httpRequest.interceptors.request.use((config) => {
 httpRequest.interceptors.response.use(
   (response) => {
     const res = response.data
-
     if (res?.code !== 200) {
       message.error(res.msg)
     }

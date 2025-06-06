@@ -2,6 +2,8 @@ import { Delete, get, post } from '.'
 import type { PaginationResponse } from '../type/axios'
 import type { PeopleItem } from '../type/people'
 import type {
+  LookUserOfProjectItem,
+  LookUserOfProjectReq,
   ProjectCreateReq,
   ProjectEditPeopleReq,
   ProjectItem,
@@ -45,5 +47,13 @@ export const apiPostAddPeopleOfProject = (params: ProjectEditPeopleReq) =>
   post<ProjectEditPeopleReq, {}>('/api/project/batchAddPeople', params)
 
 // 上传图片
-export const apiPostUploadImage = (file: File) =>
-  post<{ file: File }, string>('/api/upload', { file })
+export const apiPostUploadImage = (params: any) =>
+  post<{ file: File }, string>('/api/upload', params)
+
+// 查询项目浏览用户
+export const apiGetLookUserOfProject = (params: LookUserOfProjectReq) =>
+  get<LookUserOfProjectReq, PaginationResponse<LookUserOfProjectItem>>('/api/browseLog/queryPageByProjectId', params)
+
+// 查询项目浏览次数
+export const apiGetViewCount = (projectId: number) =>
+  get<{ projectId: number }, number>('/api/browseLog/projectBrowseCount', { projectId })

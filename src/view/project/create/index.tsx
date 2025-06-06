@@ -93,13 +93,13 @@ const ProjectCreate = () => {
     childRef.current.updatePeople(selectCurrentPeople)
   }
 
-  const selectPeoples = (value: PeopleItem[]) => {
-    setSelectPeople(value)
-  }
-
   const onClickAddPeople = () => {
     setIsShowModal(false)
     setSelectCurrentPeople(selectPeople)
+  }
+
+  const updatePeopleIds = (_?: number[], rows?: PeopleItem[]) => {
+    !!rows && setSelectPeople(rows)
   }
 
   const onSubmit = () => {
@@ -176,6 +176,7 @@ const ProjectCreate = () => {
         title="添加人员"
         width={800}
         open={isShowModal}
+        destroyOnHidden
         centered
         onCancel={() => setIsShowModal(false)}
         footer={
@@ -192,7 +193,7 @@ const ProjectCreate = () => {
           </div>
         }
       >
-        <PeopleAdd peopleIds={selectCurrentPeople.map(item => item.id)} ref={childRef} selectPeoples={selectPeoples} />
+        <PeopleAdd updatePeopleIds={updatePeopleIds} peopleIds={selectCurrentPeople.map(item => item.id)} ref={childRef} />
       </Modal>
     </div>
   )
