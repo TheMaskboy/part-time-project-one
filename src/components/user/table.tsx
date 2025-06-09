@@ -115,7 +115,7 @@ const UserTable = ({ detail }: { detail: ProjectItem }) => {
 
             {
               !!item.image && <div className="detail-item">
-                <ShowItem onChangeValue={onChangeValue} detail={item.image} />
+                <ShowItem label='照片' onChangeValue={onChangeValue} detail={item.image} />
               </div>
             }
             {

@@ -1,4 +1,4 @@
-import { Button, Input, Table, type TableProps } from 'antd'
+import { Button, Input, Spin, Table, type TableProps } from 'antd'
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import './style.scss'
 import type { PeopleItem } from '../../../type/people'
@@ -26,7 +26,8 @@ const PeopleAdd = forwardRef(
       size: 10,
       current: 1,
       id: "",
-      nickname: ""
+      nickname: "",
+      projectId
     }
 
     useEffect(() => {
@@ -35,6 +36,7 @@ const PeopleAdd = forwardRef(
 
     const getUserListMth = (init?: boolean) => {
       setLoading(true)
+      console.log(projectId)
       const func = !!projectId ? getProjectUserList : getUserList
       func(init ? paramsInit : {
         current: pageNumber,
@@ -57,12 +59,14 @@ const PeopleAdd = forwardRef(
         dataIndex: 'id',
         key: '1',
         width: 100,
+        align:"center"
       },
       {
         title: '用户名称',
         dataIndex: 'nickname',
         key: '2',
         width: 100,
+        align:"center"
       },
     ]
 
@@ -111,7 +115,7 @@ const PeopleAdd = forwardRef(
       setSearchValue("")
       setSearchId("")
       setPageNumber(1)
-      setPageSize(5)
+      setPageSize(10)
       getUserListMth(true)
     }
 
@@ -134,19 +138,23 @@ const PeopleAdd = forwardRef(
           <Button type="primary" loading={loading} onClick={onSeachValue}>查找</Button>
           <Button loading={loading} onClick={reset}>重置</Button>
         </div>
-        <Table<PeopleItem>
-          rowSelection={{
-            type: selectionType,
-            selectedRowKeys,
-            preserveSelectedRowKeys: true,
-            ...rowSelection,
-          }}
-          scroll={{ y: '300px' }}  // 使用视口高度计算
-          columns={columns}
-          rowKey="id"
-          dataSource={peopleList}
-          pagination={{ total, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), showQuickJumper: true, current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }}
-        />
+        <Spin spinning={loading}>
+          <Table<PeopleItem>
+            rowSelection={{
+              type: selectionType,
+              selectedRowKeys,
+              preserveSelectedRowKeys: true,
+              ...rowSelection,
+            }}
+            bordered
+            scroll={{ y: '305px' }}  // 使用视口高度计算
+            columns={columns}
+            rowKey="id"
+            className='add-people-table'
+            dataSource={peopleList}
+            pagination={{ total, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), showQuickJumper: true, current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }}
+          />
+        </Spin>
       </div>
     )
   }

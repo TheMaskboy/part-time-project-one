@@ -23,6 +23,7 @@ export interface PeopleEditType {
   birthday: string // 生日
   height: CustomType
   weight: CustomType
+  propertyVos?: CustomType[]
   image?: CustomType
 }
 

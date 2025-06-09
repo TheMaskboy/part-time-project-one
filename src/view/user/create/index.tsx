@@ -12,12 +12,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 const UserCreate = () => {
   interface PeopleType extends PeopleEditType {
     photo?: {
-      image: {
-        imgUrl?: string
-        file?: Blob
-      }[]
+      show: number
+      value: string
     }
-    propertyVos?: CustomType[]
   }
 
   const navigate = useNavigate()
@@ -30,6 +27,15 @@ const UserCreate = () => {
   const id = useParams()?.id
 
   const onClickSubmit = () => {
+    if (!addMessage.trim()) {
+      message.error("信息不能为空")
+      return
+    }
+    const index = customList.findIndex(item => item.name === addMessage)
+    if (index >= 0) {
+      message.error("信息不能重复")
+      return
+    }
     const arr = {
       name: addMessage,
       value: "",
@@ -43,33 +49,43 @@ const UserCreate = () => {
   useEffect(() => {
     if (!id) return
     apiGetUserDetail(Number(id)).then(res => {
-      const { nickname, birthday, height, weight, propertyVos } = res
+      const { nickname, birthday, height, weight, propertyVos, image } = res
       form.setFieldValue("nickname", nickname)
       form.setFieldValue("birthday", dayjs(birthday))
       form.setFieldValue("height", height)
       form.setFieldValue("weight", weight)
+      form.setFieldValue("photo", image)
       setCustomList(propertyVos)
     })
   }, [id])
 
   const update = () => {
     form.validateFields().then((res) => {
-      const { nickname, birthday, height, weight } = res
-      const params: PeopleType = {
+      const { nickname, birthday, height, weight, photo } = res
+      const params: PeopleEditType = {
         nickname,
         birthday: dayjs(birthday).format("YYYY-MM-DD"),
         height,
         weight,
-        propertyVos: customList
+        propertyVos: customList,
+        image: {
+          show: Number(photo?.show),
+          value: photo?.value || '',
+          name: "图片"
+        }
       }
       if (!!id) {
         params.id = Number(id)
+      }
+      const result = customList.filter(item => !item.value)
+      if (!!result && result.length > 0) {
+        message.error(`请输入${result[0].name}`)
+        return
       }
       apiPostCreateUser(params).then(() => {
         message.success("修改成功")
         navigate("/user/list", {
           replace: true
-
         })
       }).finally(() => {
         setLoading(false)
@@ -165,12 +181,23 @@ const UserCreate = () => {
         >
           新增信息
         </Button>
-        <Form.Item label="用户照片" name="photo" required>
+        <Form.Item label="用户照片" name="photo" required
+          rules={[
+            {
+              validator: (_, value: CustomType) => {
+                if ((!value.value || value.value?.length === 0)) {
+                  return Promise.reject('请上传用户照片')
+                }
+                return Promise.resolve()
+              },
+            },
+          ]}
+        >
           <UserImage />
         </Form.Item>
         <div className="btns">
           <Button onClick={update} type="primary" loading={loading}>
-            确定修改
+            确定提交
           </Button>
         </div>
       </Form>

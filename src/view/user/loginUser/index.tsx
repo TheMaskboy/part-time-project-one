@@ -119,7 +119,7 @@ const LoginUser = () => {
             </div>
         </div>
         <Spin spinning={loading}>
-            <Table<LoginUserListItem> columns={columns} dataSource={list} bordered pagination={{ total, showQuickJumper: true, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }} />
+            <Table<LoginUserListItem> rowKey="id" columns={columns} dataSource={list} bordered pagination={{ total, showQuickJumper: true, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }} />
         </Spin>
     </div>
 }

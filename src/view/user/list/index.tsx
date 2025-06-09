@@ -62,7 +62,7 @@ const UserList = () => {
 
             {
               !!item.image && <div className="detail-item">
-                <ShowItem onChangeValue={onChangeValue} detail={item.image} />
+                <ShowItem label="照片" onChangeValue={onChangeValue} detail={item.image} />
               </div>
             }
             {
@@ -186,7 +186,7 @@ const UserList = () => {
         </Button>
       </div>
       <Spin spinning={loading}>
-        <Table<PeopleItem> columns={columns} dataSource={list} bordered pagination={{ total, showQuickJumper: true, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }} />
+        <Table<PeopleItem> rowKey="id" columns={columns} dataSource={list} bordered pagination={{ total, showQuickJumper: true, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }} />
       </Spin>
     </div>
   )

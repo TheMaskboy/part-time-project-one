@@ -3,11 +3,8 @@ import { useEffect, useState } from 'react'
 import ImageUpload from '../../../../components/uploadImage'
 
 type ItemType = {
-  value: {
-    imgUrl?: string
-    file?: File | undefined
-  }[]
-  isPublic?: number
+  value: string
+  show?: number
 }
 
 interface PropsType {
@@ -20,7 +17,8 @@ const UserImage = ({ value, onChange }: PropsType) => {
 
   useEffect(() => {
     const newObj = Object.assign(value || {}, {
-      isPublic: !!isPublicValue ? 1 : 0,
+      show: !!isPublicValue ? 1 : 0,
+      value: value?.value
     })
     onChange && onChange(newObj)
   }, [isPublicValue])

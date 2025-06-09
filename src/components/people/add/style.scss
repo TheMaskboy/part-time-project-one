@@ -13,3 +13,9 @@
   align-items: center;
   gap: 10px;
 }
+
+.add-people-table {
+  .ant-table-cell {
+    padding: 10px !important;
+  }
+}

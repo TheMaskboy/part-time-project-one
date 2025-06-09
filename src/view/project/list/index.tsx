@@ -249,7 +249,7 @@ const ProjectList = () => {
         <div className="status-num-item">已结束：{projectStatusNum.end}个</div>
       </div>
       <Spin spinning={loading}>
-        <Table<ProjectItem> columns={columns} dataSource={projectList} pagination={{ total: projectAmount, showQuickJumper: true, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }} />
+        <Table<ProjectItem> rowKey="id" columns={columns} dataSource={projectList} pagination={{ total: projectAmount, showQuickJumper: true, hideOnSinglePage: true, onChange: onChangePage, pageSize: Number(pageSize), current: Number(pageNumber), showSizeChanger: true, onShowSizeChange }} />
       </Spin>
 
       <Modal

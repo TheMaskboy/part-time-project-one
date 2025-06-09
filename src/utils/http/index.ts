@@ -45,7 +45,7 @@ httpRequest.interceptors.request.use((config) => {
     ; (config as any).headers.Authorization = token
       ; (config as any).headers.token = token
       ; (config as any).headers['ngrok-skip-browser-warning'] = true
-      ; (config as any).headers['Content-Type'] = 'application/json';
+      // ; (config as any).headers['Content-Type'] = 'multipart/form-data';
   }
   return config
 }, errorHandler)

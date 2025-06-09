@@ -15,10 +15,12 @@ import PeopleAdd from '../../../components/people/add'
 import type { PeopleItem } from '../../../type/people'
 import { apiPostProjectCreate } from '../../../api/project'
 import { useNavigate } from 'react-router-dom'
+import ImageUpload from '../../../components/uploadImage'
 interface FormType {
   name: string
   desc: string
   cycle: string[]
+  image: string
 }
 
 const ProjectCreate = () => {
@@ -105,14 +107,14 @@ const ProjectCreate = () => {
   const onSubmit = () => {
     form.validateFields().then((res) => {
       setLoading(true)
-      const { name, cycle, desc } = res
+      const { name, cycle, desc, image } = res
       const params = {
         name,
         desc,
         startTime: dayjs(cycle[0]).format("YYYY-MM-DD"),
         endTime: dayjs(cycle[1]).format("YYYY-MM-DD"),
         peopleIds: selectCurrentPeople.map(item => item.id),
-        imageUrl: ""
+        imageUrl: image
       }
       apiPostProjectCreate(params).then(() => {
         message.success("创建成功")
@@ -153,6 +155,14 @@ const ProjectCreate = () => {
             format="YYYY-MM-DD"
             placeholder={['请选择时间', '请选择时间']}
           />
+        </Form.Item>
+        <Form.Item name="image" label="项目图片" rules={[
+          {
+            required: true,
+            message: '请上传项目图片',
+          },
+        ]}>
+          <ImageUpload name='上传图片' limit={1} />
         </Form.Item>
       </Form>
       <div className="people">
