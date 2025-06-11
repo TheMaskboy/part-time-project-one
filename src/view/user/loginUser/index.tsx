@@ -14,7 +14,7 @@ const LoginUser = () => {
     const nickname = new URLSearchParams(useLocation().search).get("nickname") || ""
     const phone = new URLSearchParams(useLocation().search).get("phone") || ""
     const pageNumber = new URLSearchParams(useLocation().search).get("pageNumber") || "1"
-    const pageSize = new URLSearchParams(useLocation().search).get("pageSize") || "1"
+    const pageSize = new URLSearchParams(useLocation().search).get("pageSize") || "10"
     const [loading, setLoading] = useState(false)
     const [total, setTotal] = useState(0)
     const navigate = useNavigate()

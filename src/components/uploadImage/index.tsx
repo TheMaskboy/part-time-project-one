@@ -51,8 +51,8 @@ const ImageUpload = (props: ImageUploadProps) => {
       message.error('请上传JPG/PNG格式');
       return false
     }
-    if (props.limitSize && isFileOversized(file, props.limitSize)) {
-      message.warning(`上传文件大小不能超过${props.limitSize}M,请检查后重新上传`, 3);
+    if (isFileOversized(file, (props.limitSize || 2))) {
+      message.warning(`上传文件大小不能超过${(props.limitSize || 2)}M,请检查后重新上传`, 3);
       return false;
     }
     if (file) {

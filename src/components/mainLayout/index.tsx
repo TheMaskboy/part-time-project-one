@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import Routes from '../../router'
 import type { AppRoute } from '../../type/route'
-import { Menu } from 'antd'
+import { Menu, type GetProp, type MenuProps } from 'antd'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import './style.scss'
+
+type MenuItem = GetProp<MenuProps, 'items'>[number];
 
 const MainLayout = () => {
   const route = Routes
@@ -11,6 +13,7 @@ const MainLayout = () => {
   const [openKeys, setOpenKeys] = useState<string[]>([])
   const [selectedKeys, setSelectedKeys] = useState<string[]>([])
   const location = useLocation()
+  const [menuList, setMenuList] = useState<MenuItem[]>([])
 
   useEffect(() => {
     const result = route.filter((item) => item.name === 'project')
@@ -19,6 +22,36 @@ const MainLayout = () => {
     })
     setList(result[0].children || [])
   }, [route])
+
+  useEffect(() => {
+    if (list.length === 0) return
+    const result: MenuItem[] = []
+    list.forEach(item => {
+      const obj = {
+        key: item?.path || '',
+        label: <Link
+          to={
+            item.path + '/' + (!!item.children ? item.children[0].path : '')
+          }
+        >
+          <div className="custom-item">
+            <div
+              className="icon"
+              style={{
+                backgroundImage: `url(${item.path === selectedKeys[0]
+                  ? item.iconActive
+                  : item.icon
+                  })`,
+              }}
+            />
+            {item.name}
+          </div>
+        </Link>
+      }
+      result.push(obj)
+    })
+    setMenuList(result)
+  }, [list, selectedKeys])
 
   // 根据当前路径自动设置展开和选中的菜单项
   useEffect(() => {
@@ -39,35 +72,6 @@ const MainLayout = () => {
     }
   }
 
-  // 递归渲染菜单项
-  const renderMenuItems = (items: AppRoute[]) => {
-    return items.map((item) => {
-      return (
-        <Menu.Item key={`${item?.path}`}>
-          <Link
-            to={
-              item.path + '/' + (!!item.children ? item.children[0].path : '')
-            }
-          >
-            <div className="custom-item">
-              <div
-                className="icon"
-                style={{
-                  backgroundImage: `url(${
-                    location.pathname.includes(item.path || '')
-                      ? item.iconActive
-                      : item.icon
-                  })`,
-                }}
-              />
-              {item.name}
-            </div>
-          </Link>
-        </Menu.Item>
-      )
-    })
-  }
-
   return (
     <div className="main">
       <div className="left-menu">
@@ -76,9 +80,8 @@ const MainLayout = () => {
           openKeys={openKeys}
           selectedKeys={selectedKeys}
           onOpenChange={onOpenChange}
-        >
-          {renderMenuItems(list)}
-        </Menu>
+          items={menuList}
+        />
       </div>
       <div className="right-menu">
         <Outlet />

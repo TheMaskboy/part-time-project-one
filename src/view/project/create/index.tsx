@@ -117,7 +117,7 @@ const ProjectCreate = () => {
         imageUrl: image
       }
       apiPostProjectCreate(params).then(() => {
-        message.success("创建成功")
+        message.success("提交成功")
         navigate("/project/list")
       }).finally(() => {
         setLoading(false)
